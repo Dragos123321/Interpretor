@@ -27,7 +27,7 @@ public class PrintStmt implements IStmt{
             output.add(expression.eval(state.getSymTable()));
             state.setOutput(output);
         } catch (Exception err) {
-            throw new StmtError(err.toString());
+            throw new StmtError(err.getMessage());
         }
 
         return state;

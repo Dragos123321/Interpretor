@@ -39,9 +39,14 @@ public class IfStmt implements IStmt {
 
             state.setExeStack(stack);
         } catch (Exception err) {
-            throw new StmtError(err.toString());
+            throw new StmtError(err.getMessage());
         }
 
         return state;
+    }
+
+    @Override
+    public String toString() {
+        return "if (" + exp.toString() + ") " + first.toString() + " else " + second.toString();
     }
 }

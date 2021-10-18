@@ -35,7 +35,7 @@ public class AssignStmt implements IStmt{
                     throw new StmtError("Type of expression and type of variable do not match.");
                 }
             } catch (Exception err) {
-                throw new StmtError(err.toString());
+                throw new StmtError(err.getMessage());
             }
         } else {
             throw new StmtError("Variable " + id.toString() + " is not defined.");

@@ -26,17 +26,18 @@ public class Main {
 
     public static void main(String[] args) {
 
-        IStmt originalProgram = new IfStmt(new ValueExp(new IntValue(10)),
+        /*IStmt originalProgram = new IfStmt(new ValueExp(new BoolValue(true)),
                 new CompStmt(new AssignStmt("v", new ValueExp(new IntValue(5))),
                         new PrintStmt(new ArithmeticExp('/',
                                 new VarExp("v"), new ValueExp(new IntValue(3))))),
-                new PrintStmt(new ValueExp(new IntValue(100))));
+                new PrintStmt(new ValueExp(new IntValue(100))));*/
+
         IStack<IStmt> exeStack = new JStack<IStmt>();
         IDict<String, IValue> symTable = new JDict<String, IValue>();
         IList<IValue> out = new JList<IValue>();
-        PrgState myPrgState = new PrgState(exeStack, symTable, out, originalProgram);
+        PrgState myPrgState = new PrgState(exeStack, symTable, out, null);
 
- // ex 1:  int v; v = 2; Print(v)
+        // ex 1:  int v; v = 2; Print(v)
         IStmt ex1= new CompStmt(new VarDeclStmt("v",new IntType()),
                 new CompStmt(new AssignStmt("v",new ValueExp(new IntValue(2))),
                         new PrintStmt(new VarExp("v"))));
@@ -48,8 +49,8 @@ public class Main {
                         new ValueExp(new IntValue(3)), new ValueExp(new IntValue(5))))),  new CompStmt(
                                 new AssignStmt("b",new ArithmeticExp('+',new VarExp("a"), new ValueExp(new IntValue(1)))),
                         new PrintStmt(new VarExp("b"))))));
-
         //exeStack.push(ex2);
+
         // ex 3: bool a; int v; a=true;(If a Then v=2 Else v=3);Print(v)
         IStmt ex3 = new CompStmt(new VarDeclStmt("a",new BoolType()), new CompStmt(new VarDeclStmt("v",
                 new IntType()),new CompStmt(new AssignStmt("a", new ValueExp(new BoolValue(true))),

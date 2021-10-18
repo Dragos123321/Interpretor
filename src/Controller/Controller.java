@@ -20,21 +20,24 @@ public class Controller {
         IStack<IStmt> stack = state.getExeStack();
         IStmt crtStmt = stack.pop();
 
+        PrgState new_statement = null;
         try {
-            return crtStmt.execute(state);
+            new_statement = crtStmt.execute(state);
         } catch (Exception err) {
-            throw new ControllerError(err.toString());
+            throw new ControllerError(err.getMessage());
         }
+
+        return new_statement;
     }
 
     public void allStep() {
         PrgState prg = repo.getCrtPrg();
         while (!prg.getExeStack().isEmpty()) {
             try {
-                oneStep(prg);
-                System.out.println(prg.toString());
+                PrgState new_state = oneStep(prg);
+                System.out.println(new_state.toString());
             } catch (Exception err) {
-                System.err.println(err.toString());
+                System.err.println(err.getMessage());
             }
         }
     }
