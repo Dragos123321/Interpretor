@@ -1,7 +1,6 @@
-package Model.adt;
+package Model.Adt;
 
 import java.util.Stack;
-import java.util.Vector;
 
 public class JStack<T> implements IStack<T> {
     Stack<T> stack;

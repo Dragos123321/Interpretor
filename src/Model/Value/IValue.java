@@ -1,6 +1,6 @@
-package Model.value;
+package Model.Value;
 
-import Model.types.IType;
+import Model.Types.IType;
 
 public interface IValue {
     IType getType();

@@ -1,10 +1,11 @@
-package Model.stmt;
+package Model.Statements;
 
+import Model.Exceptions.StmtError;
 import Model.PrgState;
 
 public class NopStmt implements IStmt {
 
-    public PrgState execute(PrgState state){
+    public PrgState execute(PrgState state) throws StmtError {
         return state;
     }
 

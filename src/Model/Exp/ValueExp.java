@@ -1,7 +1,8 @@
-package Model.exp;
+package Model.Exp;
 
-import Model.adt.IDict;
-import Model.value.IValue;
+import Model.Adt.IDict;
+import Model.Exceptions.ExpError;
+import Model.Value.IValue;
 
 public class ValueExp implements IExp{
     IValue elem;
@@ -11,7 +12,7 @@ public class ValueExp implements IExp{
     }
 
     @Override
-    public IValue eval(IDict<String, IValue> symTable) {
+    public IValue eval(IDict<String, IValue> symTable) throws ExpError {
         return elem;
     }
 

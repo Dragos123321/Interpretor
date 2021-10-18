@@ -1,7 +1,5 @@
-package Model.adt;
+package Model.Adt;
 
-import java.util.LinkedList;
-import java.util.Queue;
 import java.util.Vector;
 
 public class JList<T> implements IList<T> {

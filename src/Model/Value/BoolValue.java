@@ -1,13 +1,12 @@
-package Model.value;
+package Model.Value;
 
-import Model.types.BoolType;
-import Model.types.IType;
+import Model.Types.BoolType;
+import Model.Types.IType;
 
 public class BoolValue implements IValue{
+    private final boolean value;
 
-    boolean value;
-
-    public BoolValue(){
+    public BoolValue() {
         this.value = false;
     }
 
@@ -16,11 +15,11 @@ public class BoolValue implements IValue{
     }
 
     @Override
-    public boolean equals(Object o){
-        if(o == null || o.getClass() != this.getClass())
+    public boolean equals(Object other){
+        if(other == null || other.getClass() != this.getClass())
             return false;
-        BoolValue o_value = (BoolValue) o;
-        return o_value.value == this.value;
+        BoolValue other_bool = (BoolValue)other;
+        return other_bool.value == this.value;
     }
 
     public boolean getValue(){

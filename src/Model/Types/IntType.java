@@ -1,7 +1,7 @@
-package Model.types;
+package Model.Types;
 
-import Model.value.IValue;
-import Model.value.IntValue;
+import Model.Value.IValue;
+import Model.Value.IntValue;
 
 public class IntType implements IType{
     @Override
@@ -10,8 +10,8 @@ public class IntType implements IType{
     }
 
     @Override
-    public boolean equals(Object o) {
-        return o != null && o.getClass() == this.getClass();
+    public boolean equals(Object other) {
+        return other != null && other.getClass() == this.getClass();
     }
 
     @Override

@@ -1,7 +1,7 @@
 package Repo;
 
 import Model.PrgState;
-import Model.adt.JList;
+import Model.Adt.JList;
 
 public class Repo implements IRepo {
     JList<PrgState> mPrgStates;

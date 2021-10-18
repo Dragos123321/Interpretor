@@ -1,4 +1,4 @@
-package Model.adt;
+package Model.Adt;
 
 import java.util.HashMap;
 import java.util.Map;

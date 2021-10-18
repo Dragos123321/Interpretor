@@ -1,6 +1,6 @@
-package Model.types;
+package Model.Types;
 
-import Model.value.IValue;
+import Model.Value.IValue;
 
 public interface IType {
     IValue defaultValue();

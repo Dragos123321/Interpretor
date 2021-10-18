@@ -1,4 +1,4 @@
-package Model.adt;
+package Model.Adt;
 
 public interface IList<T> {
     void add(T v);

@@ -1,11 +1,10 @@
-package Model.value;
+package Model.Value;
 
-import Model.types.IType;
-import Model.types.IntType;
+import Model.Types.IType;
+import Model.Types.IntType;
 
 public class IntValue implements IValue {
-
-    int value;
+    private final int value;
 
     public IntValue() {
         this.value = 0;
@@ -19,8 +18,8 @@ public class IntValue implements IValue {
     public boolean equals(Object other) {
         if (other == null || other.getClass() != this.getClass())
             return false;
-        IntValue o_value = (IntValue) other;
-        return o_value.value == this.value;
+        IntValue other_int = (IntValue)other;
+        return other_int.value == this.value;
     }
 
     @Override

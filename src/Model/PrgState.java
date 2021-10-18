@@ -1,9 +1,9 @@
 package Model;
-import Model.adt.IDict;
-import Model.adt.IList;
-import Model.adt.IStack;
-import Model.stmt.IStmt;
-import Model.value.IValue;
+import Model.Adt.IDict;
+import Model.Adt.IList;
+import Model.Adt.IStack;
+import Model.Statements.IStmt;
+import Model.Value.IValue;
 
 public class PrgState {
 

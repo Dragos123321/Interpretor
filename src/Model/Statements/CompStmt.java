@@ -1,7 +1,8 @@
-package Model.stmt;
+package Model.Statements;
 
+import Model.Exceptions.StmtError;
 import Model.PrgState;
-import Model.adt.IStack;
+import Model.Adt.IStack;
 
 public class CompStmt implements IStmt {
     IStmt first;
@@ -18,7 +19,7 @@ public class CompStmt implements IStmt {
     }
 
     @Override
-    public PrgState execute(PrgState state) {
+    public PrgState execute(PrgState state) throws StmtError {
         IStack<IStmt> stack = state.getExeStack();
         stack.push(second);
         stack.push(first);

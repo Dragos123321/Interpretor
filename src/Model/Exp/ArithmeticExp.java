@@ -1,21 +1,22 @@
-package Model.exp;
+package Model.Exp;
 
-import Model.adt.IDict;
-import Model.types.IntType;
-import Model.value.IValue;
-import Model.value.IntValue;
+import Model.Adt.IDict;
+import Model.Exceptions.ExpError;
+import Model.Types.IntType;
+import Model.Value.IValue;
+import Model.Value.IntValue;
 
-public class ArithExp implements IExp {
+public class ArithmeticExp implements IExp {
     char op;
     IExp e1, e2;
 
-    public ArithExp(char op, IExp ex1, IExp ex2) {
+    public ArithmeticExp(char op, IExp ex1, IExp ex2) {
         this.e1 = ex1;
         this.e2 = ex2;
         this.op = op;
     }
 
-    public IValue eval(IDict<String, IValue> symTable) {
+    public IValue eval(IDict<String, IValue> symTable) throws ExpError {
         IValue v1, v2;
         v1 = e1.eval(symTable);
         if (v1.getType().equals(new IntType())) {
@@ -34,16 +35,17 @@ public class ArithExp implements IExp {
                         return new IntValue(val1 * val2);
                     case '/':
                         if (val2 == 0) {
-                            return new IntValue(0);
+                            throw new ExpError("Division by 0.");
                         } else {
                             return new IntValue(val1 / val2);
                         }
                 }
             } else {
-                return new IntValue();
+                throw new ExpError("Operand 2 is not an integer.");
             }
         }
-        return new IntValue();
+
+        throw new ExpError("Operand 1 is not an integer.");
     }
 
     public char getOp() {

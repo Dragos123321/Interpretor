@@ -1,4 +1,4 @@
-package Model.adt;
+package Model.Adt;
 
 public interface IDict<T1, T2> {
     void add(T1 v1, T2 v2);
