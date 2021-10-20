@@ -59,9 +59,10 @@ public class Console {
                     exeStack = new JStack<IStmt>();
                     symTable = new JDict<String, IValue>();
                     out = new JList<IValue>();
-                    myPrgState = new PrgState(exeStack, symTable, out, null);
                     exeStack.push(ex1);
                     myPrgState.setExeStack(exeStack);
+                    myPrgState.setSymTable(symTable);
+                    myPrgState.setOutput(out);
                     this.controller.addProgram(myPrgState);
                     this.controller.allStep();
                     break;
@@ -70,9 +71,10 @@ public class Console {
                     exeStack = new JStack<IStmt>();
                     symTable = new JDict<String, IValue>();
                     out = new JList<IValue>();
-                    myPrgState = new PrgState(exeStack, symTable, out, null);
                     exeStack.push(ex2);
                     myPrgState.setExeStack(exeStack);
+                    myPrgState.setSymTable(symTable);
+                    myPrgState.setOutput(out);
                     this.controller.addProgram(myPrgState);
                     this.controller.allStep();
                     break;
@@ -81,9 +83,10 @@ public class Console {
                     exeStack = new JStack<IStmt>();
                     symTable = new JDict<String, IValue>();
                     out = new JList<IValue>();
-                    myPrgState = new PrgState(exeStack, symTable, out, null);
                     exeStack.push(ex3);
                     myPrgState.setExeStack(exeStack);
+                    myPrgState.setSymTable(symTable);
+                    myPrgState.setOutput(out);
                     this.controller.addProgram(myPrgState);
                     this.controller.allStep();
                     break;
