@@ -20,4 +20,9 @@ public class ValueExp implements IExp{
     public String toString() {
         return elem.toString();
     }
+
+    @Override
+    public ValueExp deepCopy() {
+        return new ValueExp(this.elem);
+    }
 }

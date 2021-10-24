@@ -1,6 +1,7 @@
 package Model.Exp;
 
 import Model.Adt.IDict;
+import Model.Exceptions.DivisionByZeroError;
 import Model.Exceptions.ExpError;
 import Model.Types.IntType;
 import Model.Value.IValue;
@@ -35,7 +36,7 @@ public class ArithmeticExp implements IExp {
                         return new IntValue(val1 * val2);
                     case '/':
                         if (val2 == 0) {
-                            throw new ExpError("Division by 0.");
+                            throw new DivisionByZeroError();
                         } else {
                             return new IntValue(val1 / val2);
                         }
@@ -62,5 +63,10 @@ public class ArithmeticExp implements IExp {
 
     public String toString() {
         return e1.toString() + " " + op + " " + e2.toString();
+    }
+
+    @Override
+    public ArithmeticExp deepCopy() {
+        return new ArithmeticExp(this.op, this.e1, this.e2);
     }
 }

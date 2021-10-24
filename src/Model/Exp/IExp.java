@@ -6,5 +6,6 @@ import Model.Value.IValue;
 public interface IExp {
     IValue eval(IDict<String, IValue> symTable) throws ExpError;
     String toString();
+    IExp deepCopy();
 }
 

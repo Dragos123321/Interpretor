@@ -1,6 +1,7 @@
 package Model.Exp;
 import Model.Adt.IDict;
 import Model.Exceptions.ExpError;
+import Model.Exceptions.UndefinedError;
 import Model.Value.IValue;
 
 public class VarExp implements IExp{
@@ -14,7 +15,7 @@ public class VarExp implements IExp{
         IValue val = symTable.lookup(id);
 
         if (val == null) {
-            throw new ExpError("Variable " + id.toString() + " is not defined.");
+            throw new UndefinedError(id);
         }
 
         return val;
@@ -22,4 +23,8 @@ public class VarExp implements IExp{
 
     public String toString() {return id;}
 
+    @Override
+    public VarExp deepCopy() {
+        return new VarExp(this.id);
+    }
 }

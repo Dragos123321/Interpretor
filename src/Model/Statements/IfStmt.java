@@ -49,4 +49,9 @@ public class IfStmt implements IStmt {
     public String toString() {
         return "if (" + exp.toString() + ") " + first.toString() + " else " + second.toString();
     }
+
+    @Override
+    public IfStmt deepCopy() {
+        return new IfStmt(this.exp, this.first, this.second);
+    }
 }

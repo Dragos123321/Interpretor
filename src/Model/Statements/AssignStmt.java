@@ -44,4 +44,9 @@ public class AssignStmt implements IStmt{
         state.setSymTable(symTable);
         return state;
     }
+
+    @Override
+    public AssignStmt deepCopy() {
+        return new AssignStmt(this.id, this.expression);
+    }
 }

@@ -32,4 +32,9 @@ public class PrintStmt implements IStmt{
 
         return state;
     }
+
+    @Override
+    public PrintStmt deepCopy() {
+        return new PrintStmt(this.expression);
+    }
 }

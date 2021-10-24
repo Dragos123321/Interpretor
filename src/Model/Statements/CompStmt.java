@@ -26,4 +26,9 @@ public class CompStmt implements IStmt {
         state.setExeStack(stack);
         return state;
     }
+
+    @Override
+    public CompStmt deepCopy() {
+        return new CompStmt(this.first, this.second);
+    }
 }
