@@ -2,22 +2,52 @@ package Model.Exp;
 
 import Model.Adt.IDict;
 import Model.Exceptions.ExpError;
+import Model.Types.IntType;
+import Model.Value.BoolValue;
 import Model.Value.IValue;
+import Model.Value.IntValue;
 
-public class RelationalExp implements IExp{
+public class RelationalExp implements IExp {
     IExp e1;
     IExp e2;
-    char op;
+    String op;
 
-    public RelationalExp(char op, IExp first, IExp second) {
+    public RelationalExp(String op, IExp first, IExp second) {
         this.op = op;
         this.e1 = first;
         this.e2 = second;
     }
 
     @Override
-    public boolean eval(IDict<String, IValue> symTable) throws ExpError {
-        return false;
+    public IValue eval(IDict<String, IValue> symTable) throws ExpError {
+        IValue v1, v2;
+        v1 = this.e1.eval(symTable);
+        if (v1.getType().equals(new IntType())) {
+            v2 = this.e2.eval(symTable);
+            if (v2.getType().equals(new IntType())) {
+                IntValue i1 = (IntValue) v1;
+                IntValue i2 = (IntValue) v2;
+                int val1 = i1.getValue();
+                int val2 = i2.getValue();
+                switch (op) {
+                    case "<":
+                        return new BoolValue(val1 < val2);
+                    case "<=":
+                        return new BoolValue(val1 <= val2);
+                    case ">":
+                        return new BoolValue(val1 > val2);
+                    case ">=":
+                        return new BoolValue(val1 >= val2);
+                    case "==":
+                        return new BoolValue(val1 == val2);
+                    case "!=":
+                        return new BoolValue(val1 != val2);
+                }
+            } else {
+                throw new ExpError("Operand 2 is not an integer.");
+            }
+        }
+        throw new ExpError("Operand 1 is not an integer.");
     }
 
     @Override
