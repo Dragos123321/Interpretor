@@ -5,17 +5,22 @@ import Model.Adt.IStack;
 import Model.Statements.IStmt;
 import Model.Value.IValue;
 
+import java.io.BufferedReader;
+
 public class PrgState {
 
     IStack<IStmt> exeStack;
     IDict<String, IValue> symTable;
     IList<IValue> out;
+    IDict<String, BufferedReader> fileTable;
     IStmt originalProgram; //optional field, but good to have
 
-    public PrgState(IStack<IStmt> stack, IDict<String, IValue> symTable, IList<IValue> out, IStmt originalProgram) {
+    public PrgState(IStack<IStmt> stack, IDict<String, IValue> symTable, IList<IValue> out,
+                    IDict<String, BufferedReader> fileTable, IStmt originalProgram) {
         this.exeStack = stack;
         this.symTable = symTable;
         this.out = out;
+        this.fileTable = fileTable;
         this.originalProgram = originalProgram;
     }
 
@@ -31,6 +36,10 @@ public class PrgState {
         return this.symTable;
     }
 
+    public IDict<String, BufferedReader> getFileTable() {
+        return this.fileTable;
+    }
+
     public void setExeStack(IStack<IStmt> stack) {
         this.exeStack = stack;
     }
@@ -43,9 +52,14 @@ public class PrgState {
         this.out = output;
     }
 
+    public void setFileTable(IDict<String, BufferedReader> table) {
+        this.fileTable = table;
+    }
+
     public String toString() {
         return  "Stack: " + exeStack.toString() + "\n" +
                 "SymTable: " + symTable.toString() + "\n" +
-                "Out: " + out.toString();
+                "Out: " + out.toString() + "\n" +
+                "FileTable: " + fileTable.toString();
     }
 }
