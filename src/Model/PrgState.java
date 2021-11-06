@@ -22,6 +22,8 @@ public class PrgState {
         this.out = out;
         this.fileTable = fileTable;
         this.originalProgram = originalProgram;
+
+        this.exeStack.push(this.originalProgram);
     }
 
     public IStack<IStmt> getExeStack() {

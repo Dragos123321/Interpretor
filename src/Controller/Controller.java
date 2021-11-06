@@ -5,6 +5,8 @@ import Model.Adt.IStack;
 import Model.Statements.IStmt;
 import Repo.IRepo;
 
+import java.io.IOException;
+
 public class Controller {
     private final IRepo repo;
 
@@ -32,13 +34,18 @@ public class Controller {
 
     public void allStep() {
         PrgState prg = repo.getCrtPrg();
-        while (!prg.getExeStack().isEmpty()) {
-            try {
-                PrgState new_state = oneStep(prg);
-                System.out.println(new_state.toString());
-            } catch (Exception err) {
-                System.err.println(err.getMessage());
+        try {
+            repo.logPrgStateExec();
+            while (!prg.getExeStack().isEmpty()) {
+                try {
+                    PrgState new_state = oneStep(prg);
+                    repo.logPrgStateExec();
+                } catch (Exception err) {
+                    System.err.println(err.getMessage());
+                }
             }
+        } catch (IOException err) {
+            System.err.println(err.getMessage());
         }
     }
 }

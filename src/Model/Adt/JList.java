@@ -20,7 +20,11 @@ public class JList<T> implements IList<T> {
     }
 
     public T getFirstElement() {
-        return this.list.get(0);
+        return this.list.lastElement();
+    }
+
+    public T getLastElement() {
+        return this.list.get(this.list.size() - 1);
     }
 
     @Override
@@ -29,12 +33,19 @@ public class JList<T> implements IList<T> {
     }
 
     @Override
-    public void clear(){
+    public void clear() {
         this.list.clear();
     }
 
     @Override
     public String toString() {
-        return list.toString();
+        StringBuilder strBuilder = new StringBuilder();
+
+        for (T el : list) {
+            strBuilder.append(el.toString());
+            strBuilder.append("\n");
+        }
+
+        return strBuilder.toString();
     }
 }

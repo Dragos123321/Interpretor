@@ -23,6 +23,11 @@ public class JDict<T1, T2> implements IDict<T1, T2> {
     }
 
     @Override
+    public void remove(T1 v1) {
+        dictionary.remove(v1);
+    }
+
+    @Override
     public T2 lookup(T1 id) {
         return dictionary.get(id);
     }
@@ -34,6 +39,13 @@ public class JDict<T1, T2> implements IDict<T1, T2> {
 
     @Override
     public String toString() {
-        return dictionary.toString();
+        StringBuilder strBuilder = new StringBuilder();
+
+        for (T1 key : dictionary.keySet()) {
+            strBuilder.append(key.toString()).append(" -> ").append(dictionary.get(key).toString());
+            strBuilder.append("\n");
+        }
+
+        return strBuilder.toString();
     }
 }

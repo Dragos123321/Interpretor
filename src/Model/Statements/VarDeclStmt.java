@@ -26,7 +26,6 @@ public class VarDeclStmt implements IStmt{
             throw new StmtError("Variable " + name + " already declared.");
         }
 
-        state.setSymTable(symTable);
         return state;
     }
 

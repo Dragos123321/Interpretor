@@ -1,12 +1,16 @@
 package Model.Adt;
 
-import java.util.Stack;
+import java.util.*;
 
 public class JStack<T> implements IStack<T> {
     Stack<T> stack;
 
     public JStack() {
         stack = new Stack<T>();
+    }
+
+    public JStack(Stack<T> stack) {
+        this.stack = stack;
     }
 
     @Override
@@ -26,16 +30,21 @@ public class JStack<T> implements IStack<T> {
 
     @Override
     public String toString() {
-        StringBuilder str = new StringBuilder();
-        str.append("[ ");
+        List<String> strList = new ArrayList<String>();
 
         for (T el : stack) {
-            str.append(el.toString());
-            str.append(" ");
+            strList.add(el.toString());
         }
 
-        str.append("]");
+        ListIterator<String> iterator = strList.listIterator(strList.size());
 
-        return str.toString();
+        StringBuilder strBuilder = new StringBuilder();
+
+        while (iterator.hasPrevious()) {
+            strBuilder.append(iterator.previous());
+            strBuilder.append("\n");
+        }
+
+        return strBuilder.toString();
     }
 }

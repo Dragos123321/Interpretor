@@ -36,8 +36,6 @@ public class IfStmt implements IStmt {
                     stack.push(second);
                 }
             }
-
-            state.setExeStack(stack);
         } catch (Exception err) {
             throw new StmtError(err.getMessage());
         }

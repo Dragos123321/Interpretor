@@ -41,7 +41,6 @@ public class AssignStmt implements IStmt{
             throw new StmtError("Variable " + id.toString() + " is not defined.");
         }
 
-        state.setSymTable(symTable);
         return state;
     }
 
