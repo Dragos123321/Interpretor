@@ -1,5 +1,7 @@
 package Model;
+
 import Model.Adt.IDict;
+import Model.Adt.IHeap;
 import Model.Adt.IList;
 import Model.Adt.IStack;
 import Model.Statements.IStmt;
@@ -13,15 +15,17 @@ public class PrgState {
     IDict<String, IValue> symTable;
     IList<IValue> out;
     IDict<String, BufferedReader> fileTable;
+    IHeap<IValue> heap;
     IStmt originalProgram; //optional field, but good to have
 
     public PrgState(IStack<IStmt> stack, IDict<String, IValue> symTable, IList<IValue> out,
-                    IDict<String, BufferedReader> fileTable, IStmt originalProgram) {
+                    IDict<String, BufferedReader> fileTable, IHeap<IValue> heap, IStmt originalProgram) {
         this.exeStack = stack;
         this.symTable = symTable;
         this.out = out;
         this.fileTable = fileTable;
         this.originalProgram = originalProgram;
+        this.heap = heap;
 
         this.exeStack.push(this.originalProgram);
     }
@@ -42,6 +46,10 @@ public class PrgState {
         return this.fileTable;
     }
 
+    public IHeap<IValue> getHeap() {
+        return this.heap;
+    }
+
     public void setExeStack(IStack<IStmt> stack) {
         this.exeStack = stack;
     }
@@ -58,10 +66,15 @@ public class PrgState {
         this.fileTable = table;
     }
 
+    public void setHeap(IHeap<IValue> heap) {
+        this.heap = heap;
+    }
+
     public String toString() {
-        return  "Stack: " + exeStack.toString() + "\n" +
+        return "Stack: " + exeStack.toString() + "\n" +
                 "SymTable: " + symTable.toString() + "\n" +
                 "Out: " + out.toString() + "\n" +
-                "FileTable: " + fileTable.toString();
+                "FileTable: " + fileTable.toString() + "\n" +
+                "Heap: " + heap.toString();
     }
 }

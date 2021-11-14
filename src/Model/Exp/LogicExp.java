@@ -1,6 +1,7 @@
 package Model.Exp;
 
 import Model.Adt.IDict;
+import Model.Adt.IHeap;
 import Model.Exceptions.ExpError;
 import Model.Types.BoolType;
 import Model.Types.IntType;
@@ -18,11 +19,11 @@ public class LogicExp implements IExp {
         this.op = op;
     }
 
-    public IValue eval(IDict<String, IValue> symTable) throws ExpError {
+    public IValue eval(IDict<String, IValue> symTable, IHeap<IValue> heap) throws ExpError {
         IValue v1, v2;
-        v1 = e1.eval(symTable);
+        v1 = e1.eval(symTable, heap);
         if (v1.getType().equals(new BoolType())) {
-            v2 = e2.eval(symTable);
+            v2 = e2.eval(symTable, heap);
             if (v2.getType().equals(new BoolType())) {
                 BoolValue b1 = (BoolValue) v1;
                 BoolValue b2 = (BoolValue) v2;

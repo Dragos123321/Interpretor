@@ -32,6 +32,11 @@ public class IntValue implements IValue {
         return new IntType();
     }
 
+    @Override
+    public boolean isRefType() {
+        return false;
+    }
+
     public int getValue() {
         return this.value;
     }

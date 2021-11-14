@@ -27,11 +27,12 @@ public class Interpreter {
         IDict<String, IValue> symTable1 = new JDict<>();
         IList<IValue> out1 = new JList<>();
         IDict<String, BufferedReader> fileTable1 = new JDict<>();
+        IHeap<IValue> heap1 = new Heap<IValue>();
 
         IStmt ex1 = new CompStmt(new VarDeclStmt("v", new IntType()),
                 new CompStmt(new AssignStmt("v", new ValueExp(new IntValue(2))),
                         new PrintStmt(new VarExp("v"))));
-        PrgState prg1 = new PrgState(exeStack1, symTable1, out1, fileTable1, ex1);
+        PrgState prg1 = new PrgState(exeStack1, symTable1, out1, fileTable1, heap1, ex1);
         IRepo repo1 = new Repo(prg1, "log1.txt");
         Controller cont1 = new Controller(repo1);
 
@@ -39,12 +40,13 @@ public class Interpreter {
         IDict<String, IValue> symTable2 = new JDict<>();
         IList<IValue> out2 = new JList<>();
         IDict<String, BufferedReader> fileTable2 = new JDict<>();
+        IHeap<IValue> heap2 = new Heap<IValue>();
         IStmt ex2 = new CompStmt(new VarDeclStmt("a", new IntType()), new CompStmt(new VarDeclStmt("b", new IntType()),
                 new CompStmt(new AssignStmt("a", new ArithmeticExp('+', new ValueExp(new IntValue(2)), new ArithmeticExp('*',
                         new ValueExp(new IntValue(3)), new ValueExp(new IntValue(5))))), new CompStmt(
                         new AssignStmt("b", new ArithmeticExp('+', new VarExp("a"), new ValueExp(new IntValue(1)))),
                         new PrintStmt(new VarExp("b"))))));
-        PrgState prg2 = new PrgState(exeStack2, symTable2, out2, fileTable2, ex2);
+        PrgState prg2 = new PrgState(exeStack2, symTable2, out2, fileTable2, heap2, ex2);
         IRepo repo2 = new Repo(prg2, "log2.txt");
         Controller cont2 = new Controller(repo2);
 
@@ -52,12 +54,13 @@ public class Interpreter {
         IDict<String, IValue> symTable3 = new JDict<>();
         IList<IValue> out3 = new JList<>();
         IDict<String, BufferedReader> fileTable3 = new JDict<>();
+        IHeap<IValue> heap3 = new Heap<IValue>();
         IStmt ex3 = new CompStmt(new VarDeclStmt("a", new BoolType()), new CompStmt(new VarDeclStmt("v",
                 new IntType()), new CompStmt(new AssignStmt("a", new ValueExp(new BoolValue(true))),
                 new CompStmt(new IfStmt(new VarExp("a"), new AssignStmt("v", new ValueExp(new IntValue(2))),
                         new AssignStmt("v", new ValueExp(new IntValue(3)))), new PrintStmt(new
                         VarExp("v"))))));
-        PrgState prg3 = new PrgState(exeStack3, symTable3, out3, fileTable3, ex3);
+        PrgState prg3 = new PrgState(exeStack3, symTable3, out3, fileTable3, heap3, ex3);
         IRepo repo3 = new Repo(prg3, "log3.txt");
         Controller cont3 = new Controller(repo3);
 
@@ -65,6 +68,7 @@ public class Interpreter {
         IDict<String, IValue> symTable4 = new JDict<>();
         IList<IValue> out4 = new JList<>();
         IDict<String, BufferedReader> fileTable4 = new JDict<>();
+        IHeap<IValue> heap4 = new Heap<IValue>();
         IStmt ex4 = new CompStmt(new VarDeclStmt("varf", new StringType()), new CompStmt(new AssignStmt("varf",
                 new ValueExp(new StringValue("test.in"))), new CompStmt(new openRFile("varf", new ValueExp(new StringValue("test.in"))),
                 new CompStmt(new VarDeclStmt("varc", new IntType()), new CompStmt(new readFile("varf",
@@ -72,9 +76,25 @@ public class Interpreter {
                         new CompStmt(new readFile("varf", new ValueExp(new StringValue("test.in")), "varc"),
                                 new CompStmt(new PrintStmt(new VarExp("varc")),
                                         new closeRFile("varf", new ValueExp(new StringValue("test.in")))))))))));
-        PrgState prg4 = new PrgState(exeStack4, symTable4, out4, fileTable4, ex4);
+        PrgState prg4 = new PrgState(exeStack4, symTable4, out4, fileTable4, heap4, ex4);
         IRepo repo4 = new Repo(prg4, "log4.txt");
         Controller cont4 = new Controller(repo4);
+
+        IStack<IStmt> exeStack5 = new JStack<>();
+        IDict<String, IValue> symTable5 = new JDict<>();
+        IList<IValue> out5 = new JList<>();
+        IDict<String, BufferedReader> fileTable5 = new JDict<>();
+        IHeap<IValue> heap5 = new Heap<IValue>();
+        IStmt ex5 = new CompStmt(new VarDeclStmt("varf", new StringType()), new CompStmt(new AssignStmt("varf",
+                new ValueExp(new StringValue("test.in"))), new CompStmt(new openRFile("varf", new ValueExp(new StringValue("test.in"))),
+                new CompStmt(new VarDeclStmt("varc", new IntType()), new CompStmt(new readFile("varf",
+                        new ValueExp(new StringValue("test.in")), "varc"), new CompStmt(new PrintStmt(new VarExp("varc")),
+                        new CompStmt(new readFile("varf", new ValueExp(new StringValue("test.in")), "varc"),
+                                new CompStmt(new PrintStmt(new VarExp("varc")),
+                                        new closeRFile("varf", new ValueExp(new StringValue("test.in")))))))))));
+        PrgState prg5 = new PrgState(exeStack5, symTable5, out5, fileTable5, heap5, ex5);
+        IRepo repo5 = new Repo(prg5, "log5.txt");
+        Controller cont5 = new Controller(repo5);
 
         TextMenu menu = new TextMenu();
         menu.addCommand(new ExitCommand("0", "exit"));
@@ -82,6 +102,7 @@ public class Interpreter {
         menu.addCommand(new RunExample("2", ex2.toString(), cont2));
         menu.addCommand(new RunExample("3", ex3.toString(), cont3));
         menu.addCommand(new RunExample("4", ex4.toString(), cont4));
+        menu.addCommand(new RunExample("5", ex5.toString(), cont5));
 
         menu.show();
     }

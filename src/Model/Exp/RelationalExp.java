@@ -1,6 +1,7 @@
 package Model.Exp;
 
 import Model.Adt.IDict;
+import Model.Adt.IHeap;
 import Model.Exceptions.ExpError;
 import Model.Types.IntType;
 import Model.Value.BoolValue;
@@ -19,11 +20,11 @@ public class RelationalExp implements IExp {
     }
 
     @Override
-    public IValue eval(IDict<String, IValue> symTable) throws ExpError {
+    public IValue eval(IDict<String, IValue> symTable, IHeap<IValue> heap) throws ExpError {
         IValue v1, v2;
-        v1 = this.e1.eval(symTable);
+        v1 = this.e1.eval(symTable, heap);
         if (v1.getType().equals(new IntType())) {
-            v2 = this.e2.eval(symTable);
+            v2 = this.e2.eval(symTable, heap);
             if (v2.getType().equals(new IntType())) {
                 IntValue i1 = (IntValue) v1;
                 IntValue i2 = (IntValue) v2;

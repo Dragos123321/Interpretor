@@ -37,6 +37,11 @@ public class BoolValue implements IValue{
     }
 
     @Override
+    public boolean isRefType() {
+        return false;
+    }
+
+    @Override
     public IValue deepCopy() {
         return new BoolValue(this.value);
     }

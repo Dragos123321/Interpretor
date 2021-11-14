@@ -1,5 +1,6 @@
 package Model.Exp;
 import Model.Adt.IDict;
+import Model.Adt.IHeap;
 import Model.Exceptions.ExpError;
 import Model.Exceptions.UndefinedError;
 import Model.Value.IValue;
@@ -11,7 +12,7 @@ public class VarExp implements IExp{
         this.id = id;
     }
 
-    public IValue eval(IDict<String, IValue> symTable) throws ExpError {
+    public IValue eval(IDict<String, IValue> symTable, IHeap<IValue> heap) throws ExpError {
         IValue val = symTable.lookup(id);
 
         if (val == null) {
