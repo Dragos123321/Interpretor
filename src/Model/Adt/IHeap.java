@@ -1,5 +1,7 @@
 package Model.Adt;
 
+import java.util.Map;
+
 public interface IHeap<T> {
     int add(T value);
 
@@ -10,6 +12,10 @@ public interface IHeap<T> {
     T lookup(Integer key);
 
     boolean isDefined(Integer key);
+
+    void setContent(Map<Integer, T> value);
+
+    Map<Integer, T> getContent();
 
     String toString();
 }

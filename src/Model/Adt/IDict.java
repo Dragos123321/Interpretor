@@ -1,5 +1,7 @@
 package Model.Adt;
 
+import java.util.Map;
+
 public interface IDict<T1, T2> {
     void add(T1 v1, T2 v2);
 
@@ -10,6 +12,8 @@ public interface IDict<T1, T2> {
     T2 lookup(T1 id);
 
     boolean isDefined(T1 id);
+
+    Map<T1, T2> getContent();
 
     String toString();
 }

@@ -42,6 +42,16 @@ public class Heap<T> implements IHeap<T> {
     }
 
     @Override
+    public void setContent(Map<Integer, T> value) {
+        this.heapTable = value;
+    }
+
+    @Override
+    public Map<Integer, T> getContent() {
+        return this.heapTable;
+    }
+
+    @Override
     public String toString() {
         StringBuilder strBuilder = new StringBuilder();
 
