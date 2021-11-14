@@ -6,18 +6,14 @@ import Model.Exceptions.ExpError;
 import Model.Exceptions.StmtError;
 import Model.Exp.IExp;
 import Model.PrgState;
-import Model.Types.BoolType;
-import Model.Types.IntType;
-import Model.Types.RefType;
-import Model.Types.StringType;
 import Model.Value.IValue;
 import Model.Value.RefValue;
 
-public class HeapAllocStmt implements IStmt {
+public class HeapWriteStmt implements IStmt {
     private final String var_name;
     private final IExp exp;
 
-    public HeapAllocStmt(String var_name, IExp exp) {
+    public HeapWriteStmt(String var_name, IExp exp) {
         this.var_name = var_name;
         this.exp = exp;
     }
@@ -31,17 +27,22 @@ public class HeapAllocStmt implements IStmt {
             IValue val1 = symTable.lookup(var_name);
             if (val1.isRefType()) {
                 RefValue r_val1 = (RefValue) val1;
-                try {
-                    IValue val2 = this.exp.eval(symTable, heap);
-                    if (val2.getType().equals(r_val1.getLocationType())) {
-                        r_val1.setValue(heap.add(val2));
+                if (heap.isDefined(r_val1.getValue())) {
+                    try {
+                        IValue val2 = this.exp.eval(symTable, heap);
+                        if (val2.getType().equals(r_val1.getLocationType())) {
+                            heap.update(r_val1.getValue(), val2);
+                        }
+                        else {
+                            throw new StmtError("Type mismatch");
+                        }
                     }
-                    else {
-                        throw new StmtError("Type mismatch.");
+                    catch (ExpError err) {
+                        throw new StmtError(err.getMessage());
                     }
                 }
-                catch(ExpError err) {
-                    throw new StmtError(err.getMessage());
+                else {
+                    throw new StmtError(r_val1.getValue() + " is not a valid memory address");
                 }
             }
             else {

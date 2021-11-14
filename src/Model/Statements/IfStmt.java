@@ -1,5 +1,6 @@
 package Model.Statements;
 
+import Model.Adt.IHeap;
 import Model.Exceptions.StmtError;
 import Model.PrgState;
 import Model.Adt.IDict;
@@ -23,9 +24,10 @@ public class IfStmt implements IStmt {
     public PrgState execute(PrgState state) throws StmtError {
         IStack<IStmt> stack = state.getExeStack();
         IDict<String, IValue> symTable = state.getSymTable();
+        IHeap<IValue> heap = state.getHeap();
 
         try {
-            IValue cond = exp.eval(symTable);
+            IValue cond = exp.eval(symTable, heap);
             if (!cond.getType().equals(new BoolType())) {
                 throw new StmtError("Conditional expr is not a boolean.");
             } else {

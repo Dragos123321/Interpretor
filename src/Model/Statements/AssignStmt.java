@@ -1,5 +1,6 @@
 package Model.Statements;
 
+import Model.Adt.IHeap;
 import Model.Exceptions.StmtError;
 import Model.PrgState;
 import Model.Adt.IDict;
@@ -24,10 +25,11 @@ public class AssignStmt implements IStmt{
 
     public PrgState execute(PrgState state) throws StmtError {
         IDict<String, IValue> symTable = state.getSymTable();
+        IHeap<IValue> heap = state.getHeap();
 
         if (symTable.isDefined(id)) {
             try {
-                IValue val = expression.eval(symTable);
+                IValue val = expression.eval(symTable, heap);
                 IType type = symTable.lookup(id).getType();
                 if (val.getType().equals(type)) {
                     symTable.update(id, val);

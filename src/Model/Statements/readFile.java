@@ -1,6 +1,7 @@
 package Model.Statements;
 
 import Model.Adt.IDict;
+import Model.Adt.IHeap;
 import Model.Exceptions.ExpError;
 import Model.Exceptions.StmtError;
 import Model.Exp.IExp;
@@ -30,6 +31,7 @@ public class readFile implements IStmt {
     public PrgState execute(PrgState state) throws StmtError {
         IDict<String, IValue> symTable = state.getSymTable();
         IDict<String, BufferedReader> fileTable = state.getFileTable();
+        IHeap<IValue> heap = state.getHeap();
 
         IValue var = symTable.lookup(var_name);
         if (var == null) {
@@ -43,7 +45,7 @@ public class readFile implements IStmt {
         IntValue ivar = (IntValue) var;
 
         try {
-            IValue expr_value = this.expression.eval(symTable);
+            IValue expr_value = this.expression.eval(symTable, heap);
 
             if (!expr_value.getType().equals(new StringType())) {
                 throw new StmtError("Expression does not evaluate to string.");

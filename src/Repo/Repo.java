@@ -41,6 +41,8 @@ public class Repo implements IRepo {
         logFile.println(mPrgStates.getLastElement().getOutput().toString());
         logFile.println("FileTable:");
         logFile.println(mPrgStates.getLastElement().getFileTable().toString());
+        logFile.println("Heap:");
+        logFile.println(mPrgStates.getLastElement().getHeap().toString());
 
         logFile.close();
     }

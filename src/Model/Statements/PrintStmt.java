@@ -24,7 +24,7 @@ public class PrintStmt implements IStmt{
         IList<IValue> output = state.getOutput();
 
         try {
-            output.add(expression.eval(state.getSymTable()));
+            output.add(expression.eval(state.getSymTable(), state.getHeap()));
         } catch (Exception err) {
             throw new StmtError(err.getMessage());
         }

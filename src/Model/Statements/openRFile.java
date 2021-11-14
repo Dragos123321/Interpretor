@@ -1,6 +1,7 @@
 package Model.Statements;
 
 import Model.Adt.IDict;
+import Model.Adt.IHeap;
 import Model.Exceptions.ExpError;
 import Model.Exceptions.StmtError;
 import Model.Exp.IExp;
@@ -25,9 +26,10 @@ public class openRFile implements IStmt {
     @Override
     public PrgState execute(PrgState state) throws StmtError {
         IDict<String, IValue> symTable = state.getSymTable();
+        IHeap<IValue> heap = state.getHeap();
 
         try {
-            IValue exprValue = expression.eval(symTable);
+            IValue exprValue = expression.eval(symTable, heap);
 
             IDict<String, BufferedReader> fileTable = state.getFileTable();
 
