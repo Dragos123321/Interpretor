@@ -52,7 +52,7 @@ public class HeapWriteStmt implements IStmt {
         else {
             throw new StmtError(var_name + " is not defined.");
         }
-        return null;
+        return state;
     }
 
     @Override

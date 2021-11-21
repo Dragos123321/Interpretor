@@ -2,10 +2,7 @@ package View;
 
 import Controller.Controller;
 import Model.Adt.*;
-import Model.Exp.ArithmeticExp;
-import Model.Exp.HeapReadingExp;
-import Model.Exp.ValueExp;
-import Model.Exp.VarExp;
+import Model.Exp.*;
 import Model.PrgState;
 import Model.Statements.*;
 import Model.Types.BoolType;
@@ -86,7 +83,7 @@ public class Interpreter {
         IHeap<IValue> heap5 = new Heap<IValue>();
         IStmt ex5 = new CompStmt(new VarDeclStmt("v", new RefType(new IntType())), new CompStmt(new HeapAllocStmt("v",
                 new ValueExp(new IntValue(20))), new CompStmt(new VarDeclStmt("a", new RefType(new RefType(new IntType()))),
-                new CompStmt(new HeapAllocStmt("a", new ValueExp(new RefValue(1, new IntType()))),
+                new CompStmt(new HeapAllocStmt("a", new VarExp("v")),
                         new CompStmt(new PrintStmt(new VarExp("v")), new PrintStmt(new VarExp("a")))))));
         PrgState prg5 = new PrgState(exeStack5, symTable5, out5, fileTable5, heap5, ex5);
         IRepo repo5 = new Repo(prg5, "log5.txt");
@@ -99,7 +96,7 @@ public class Interpreter {
         IHeap<IValue> heap6 = new Heap<IValue>();
         IStmt ex6 = new CompStmt(new VarDeclStmt("v", new RefType(new IntType())), new CompStmt(new HeapAllocStmt("v",
                 new ValueExp(new IntValue(20))), new CompStmt(new VarDeclStmt("a", new RefType(new RefType(new IntType()))),
-                new CompStmt(new HeapAllocStmt("a", new ValueExp(new RefValue(1, new IntType()))),
+                new CompStmt(new HeapAllocStmt("a", new VarExp("v")),
                         new CompStmt(new PrintStmt(new HeapReadingExp(new VarExp("v"))),
                                 new PrintStmt(new ArithmeticExp('+', new HeapReadingExp(new HeapReadingExp(new VarExp("a"))),
                                         new ValueExp(new IntValue(5)))))))));
@@ -121,6 +118,36 @@ public class Interpreter {
         IRepo repo7 = new Repo(prg7, "log7.txt");
         Controller cont7 = new Controller(repo7);
 
+        IStack<IStmt> exeStack8 = new JStack<>();
+        IDict<String, IValue> symTable8 = new JDict<>();
+        IList<IValue> out8 = new JList<>();
+        IDict<String, BufferedReader> fileTable8 = new JDict<>();
+        IHeap<IValue> heap8 = new Heap<IValue>();
+        IStmt ex8 = new CompStmt(new VarDeclStmt("v", new IntType()), new CompStmt(new AssignStmt("v", new ValueExp(new IntValue(4))),
+                new CompStmt(new WhileStmt(new RelationalExp(">", new VarExp("v"), new ValueExp(new IntValue(0))),
+                        new CompStmt(new PrintStmt(new VarExp("v")), new AssignStmt("v", new ArithmeticExp('-',
+                                new VarExp("v"), new ValueExp(new IntValue(1)))))), new PrintStmt(new VarExp("v")))));
+        PrgState prg8 = new PrgState(exeStack8, symTable8, out8, fileTable8, heap8, ex8);
+        IRepo repo8 = new Repo(prg8, "log8.txt");
+        Controller cont8 = new Controller(repo8);
+
+        IStack<IStmt> exeStack9 = new JStack<>();
+        IDict<String, IValue> symTable9 = new JDict<>();
+        IList<IValue> out9 = new JList<>();
+        IDict<String, BufferedReader> fileTable9 = new JDict<>();
+        IHeap<IValue> heap9 = new Heap<IValue>();
+        IStmt ex9 = new CompStmt(new VarDeclStmt("v", new RefType(new IntType())), new CompStmt(new HeapAllocStmt("v",
+                new ValueExp(new IntValue(20))), new CompStmt(new VarDeclStmt("a", new RefType(new RefType(new IntType()))),
+                new CompStmt(new HeapAllocStmt("a", new VarExp("v")),
+                        new CompStmt(new PrintStmt(new HeapReadingExp(new VarExp("v"))), new CompStmt(
+                                new HeapAllocStmt("v", new ValueExp(new IntValue(30))),
+                                new CompStmt(new PrintStmt(new HeapReadingExp(new HeapReadingExp(new VarExp("a")))),
+                                        new CompStmt(new HeapAllocStmt("a", new VarExp("v")),
+                                                new PrintStmt(new HeapReadingExp(new HeapReadingExp(new VarExp("a"))))))))))));
+        PrgState prg9 = new PrgState(exeStack9, symTable9, out9, fileTable9, heap9, ex9);
+        IRepo repo9 = new Repo(prg9, "log9.txt");
+        Controller cont9 = new Controller(repo9);
+
         TextMenu menu = new TextMenu();
         menu.addCommand(new ExitCommand("0", "exit"));
         menu.addCommand(new RunExample("1", ex1.toString(), cont1));
@@ -130,6 +157,8 @@ public class Interpreter {
         menu.addCommand(new RunExample("5", ex5.toString(), cont5));
         menu.addCommand(new RunExample("6", ex6.toString(), cont6));
         menu.addCommand(new RunExample("7", ex7.toString(), cont7));
+        menu.addCommand(new RunExample("8", ex8.toString(), cont8));
+        menu.addCommand(new RunExample("9", ex9.toString(), cont9));
 
         menu.show();
     }

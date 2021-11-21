@@ -26,7 +26,7 @@ public class RefValue implements IValue {
 
     @Override
     public String toString() {
-        return Integer.toString(this.address) + "," + locationType.toString();
+        return '(' + Integer.toString(this.address) + "," + locationType.toString() + ")";
     }
 
     @Override

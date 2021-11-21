@@ -56,7 +56,7 @@ public class Heap<T> implements IHeap<T> {
         StringBuilder strBuilder = new StringBuilder();
 
         for (Integer key : heapTable.keySet()) {
-            strBuilder.append(Integer.toString(key)).append("->(").append(heapTable.get(key).toString()).append(")");
+            strBuilder.append(Integer.toString(key)).append(" -> ").append(heapTable.get(key).toString());
             strBuilder.append("\n");
         }
 

@@ -51,7 +51,7 @@ public class HeapAllocStmt implements IStmt {
         else {
             throw new StmtError(var_name + " is not defined.");
         }
-        return null;
+        return state;
     }
 
     @Override
@@ -61,6 +61,6 @@ public class HeapAllocStmt implements IStmt {
 
     @Override
     public String toString() {
-        return var_name + " -> (" + exp.toString() + ")";
+        return "new(" + var_name + ", " + exp.toString() + ")";
     }
 }

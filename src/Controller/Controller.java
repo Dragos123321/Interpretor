@@ -46,7 +46,7 @@ public class Controller {
             while (!prg.getExeStack().isEmpty()) {
                 try {
                     PrgState new_state = oneStep(prg);
-                    prg.getHeap().setContent(unsafe_garbage_collector(get_used_addresses(prg.getSymTable().getContent().values(),
+                    prg.getHeap().setContent(garbage_collector(get_used_addresses(prg.getSymTable().getContent().values(),
                             prg.getHeap().getContent().values()), prg.getHeap().getContent()));
                     repo.logPrgStateExec();
                 } catch (Exception err) {
@@ -75,7 +75,7 @@ public class Controller {
         return symTableAddresses;
     }
 
-    private Map<Integer, IValue> unsafe_garbage_collector(List<Integer> symTableAddr, Map<Integer, IValue> heap) {
+    private Map<Integer, IValue> garbage_collector(List<Integer> symTableAddr, Map<Integer, IValue> heap) {
         return heap.entrySet().stream()
                 .filter(e -> symTableAddr.contains(e.getKey()))
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
