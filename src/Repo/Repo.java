@@ -1,5 +1,6 @@
 package Repo;
 
+import Model.Adt.IList;
 import Model.PrgState;
 import Model.Adt.JList;
 
@@ -9,7 +10,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 public class Repo implements IRepo {
-    JList<PrgState> mPrgStates;
+    IList<PrgState> mPrgStates;
     String logFilePath;
     PrintWriter logFile;
     boolean firstTime;
@@ -22,8 +23,13 @@ public class Repo implements IRepo {
     }
 
     @Override
-    public PrgState getCrtPrg() {
-        return mPrgStates.getLastElement();
+    public IList<PrgState> getPrgList() {
+        return mPrgStates;
+    }
+
+    @Override
+    public void setPrgList(IList<PrgState> newPrgStates) {
+        mPrgStates = newPrgStates;
     }
 
     @Override
@@ -32,7 +38,7 @@ public class Repo implements IRepo {
     }
 
     @Override
-    public void logPrgStateExec() throws IOException {
+    public void logPrgStateExec(PrgState state) throws IOException {
         if (firstTime) {
             logFile = new PrintWriter(new BufferedWriter(new FileWriter(logFilePath, false)));
             this.firstTime = false;
@@ -40,16 +46,18 @@ public class Repo implements IRepo {
             logFile = new PrintWriter(new BufferedWriter(new FileWriter(logFilePath, true)));
         }
 
+        logFile.print("Thread id: ");
+        logFile.println(state.getID());
         logFile.println("ExeStack:");
-        logFile.println(mPrgStates.getLastElement().getExeStack().toString());
+        logFile.println(state.getExeStack().toString());
         logFile.println("SymTable:");
-        logFile.println(mPrgStates.getLastElement().getSymTable().toString());
+        logFile.println(state.getSymTable().toString());
         logFile.println("Output:");
-        logFile.println(mPrgStates.getLastElement().getOutput().toString());
+        logFile.println(state.getOutput().toString());
         logFile.println("FileTable:");
-        logFile.println(mPrgStates.getLastElement().getFileTable().toString());
+        logFile.println(state.getFileTable().toString());
         logFile.println("Heap:");
-        logFile.println(mPrgStates.getLastElement().getHeap().toString());
+        logFile.println(state.getHeap().toString());
 
         logFile.close();
     }

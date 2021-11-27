@@ -16,4 +16,6 @@ public interface IDict<T1, T2> {
     Map<T1, T2> getContent();
 
     String toString();
+
+    IDict<T1, T2> deepCopy();
 }

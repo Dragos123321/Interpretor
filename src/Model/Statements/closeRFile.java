@@ -6,6 +6,8 @@ import Model.Exceptions.ExpError;
 import Model.Exceptions.StmtError;
 import Model.Exp.IExp;
 import Model.PrgState;
+import Model.Types.BoolType;
+import Model.Types.IType;
 import Model.Types.StringType;
 import Model.Value.IValue;
 import Model.Value.StringValue;
@@ -69,5 +71,15 @@ public class closeRFile implements IStmt {
     @Override
     public IStmt deepCopy() {
         return new closeRFile(filename, expression);
+    }
+
+    @Override
+    public IDict<String, IType> typecheck(IDict<String, IType> typeEnv) throws Exception {
+        IType type_exp = expression.typeCheck(typeEnv);
+        if (type_exp.equals(new StringType())) {
+            return typeEnv;
+        } else {
+            throw new StmtError("The expression of READ is not of type string");
+        }
     }
 }

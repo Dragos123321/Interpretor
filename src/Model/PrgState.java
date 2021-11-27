@@ -4,7 +4,9 @@ import Model.Adt.IDict;
 import Model.Adt.IHeap;
 import Model.Adt.IList;
 import Model.Adt.IStack;
+import Model.Exceptions.ControllerError;
 import Model.Statements.IStmt;
+import Model.Types.IType;
 import Model.Value.IValue;
 
 import java.io.BufferedReader;
@@ -17,17 +19,40 @@ public class PrgState {
     IDict<String, BufferedReader> fileTable;
     IHeap<IValue> heap;
     IStmt originalProgram; //optional field, but good to have
+    IDict<String, IType> typeChecker;
+    private static int current_id = 1;
+    private int thread_id;
 
     public PrgState(IStack<IStmt> stack, IDict<String, IValue> symTable, IList<IValue> out,
-                    IDict<String, BufferedReader> fileTable, IHeap<IValue> heap, IStmt originalProgram) {
+                    IDict<String, BufferedReader> fileTable, IHeap<IValue> heap, IDict<String, IType> typeChecker,
+                    IStmt originalProgram) {
         this.exeStack = stack;
         this.symTable = symTable;
         this.out = out;
         this.fileTable = fileTable;
         this.originalProgram = originalProgram;
         this.heap = heap;
+        this.typeChecker = typeChecker;
+
+        try {
+            originalProgram.typecheck(this.typeChecker);
+        } catch (Exception err) {
+            System.out.println(err.getMessage());
+            System.exit(1);
+        }
+
+        setID();
 
         this.exeStack.push(this.originalProgram);
+    }
+
+    public int getID() {
+        return thread_id;
+    }
+
+    synchronized public void setID() {
+        this.thread_id = current_id;
+        current_id++;
     }
 
     public IStack<IStmt> getExeStack() {
@@ -40,6 +65,10 @@ public class PrgState {
 
     public IDict<String, IValue> getSymTable() {
         return this.symTable;
+    }
+
+    public IDict<String, IType> getTypeChecker() {
+        return this.typeChecker;
     }
 
     public IDict<String, BufferedReader> getFileTable() {
@@ -71,10 +100,30 @@ public class PrgState {
     }
 
     public String toString() {
-        return "Stack: " + exeStack.toString() + "\n" +
+        return  "ID: " + thread_id + "\n" +
+                "Stack: " + exeStack.toString() + "\n" +
                 "SymTable: " + symTable.toString() + "\n" +
                 "Out: " + out.toString() + "\n" +
                 "FileTable: " + fileTable.toString() + "\n" +
                 "Heap: " + heap.toString();
+    }
+
+    public boolean isNotCompleted() {
+        return !exeStack.isEmpty();
+    }
+
+    public PrgState oneStep() throws ControllerError {
+        if (exeStack.isEmpty())
+            throw new ControllerError("Stack is empty.");
+        IStmt crtStmt = exeStack.pop();
+
+        PrgState new_statement = null;
+        try {
+            new_statement = crtStmt.execute(this);
+        } catch (Exception err) {
+            throw new ControllerError(err.getMessage());
+        }
+
+        return new_statement;
     }
 }

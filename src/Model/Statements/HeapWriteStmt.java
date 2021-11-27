@@ -6,6 +6,8 @@ import Model.Exceptions.ExpError;
 import Model.Exceptions.StmtError;
 import Model.Exp.IExp;
 import Model.PrgState;
+import Model.Types.IType;
+import Model.Types.RefType;
 import Model.Value.IValue;
 import Model.Value.RefValue;
 
@@ -63,5 +65,16 @@ public class HeapWriteStmt implements IStmt {
     @Override
     public String toString() {
         return var_name + " -> (" + exp.toString() + ")";
+    }
+
+    @Override
+    public IDict<String, IType> typecheck(IDict<String, IType> typeEnv) throws Exception {
+        IType type_var = typeEnv.lookup(var_name);
+        IType type_exp = exp.typeCheck(typeEnv);
+
+        if (type_var.equals(new RefType(type_exp)))
+            return typeEnv;
+        else
+            throw new StmtError("WRITE stmt: right hand side and left hand side have different types ");
     }
 }

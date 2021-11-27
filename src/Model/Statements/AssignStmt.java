@@ -50,4 +50,15 @@ public class AssignStmt implements IStmt{
     public AssignStmt deepCopy() {
         return new AssignStmt(this.id, this.expression);
     }
+
+    @Override
+    public IDict<String, IType> typecheck(IDict<String, IType> typeEnv) throws Exception {
+        IType type_var = typeEnv.lookup(id);
+        IType type_exp = expression.typeCheck(typeEnv);
+        if (type_var.equals(type_exp)) {
+            return typeEnv;
+        } else {
+            throw new StmtError("Assignment: right hand side and left hand side have different types.");
+        }
+    }
 }

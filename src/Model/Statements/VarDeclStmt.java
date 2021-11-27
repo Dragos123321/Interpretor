@@ -38,4 +38,10 @@ public class VarDeclStmt implements IStmt{
     public VarDeclStmt deepCopy() {
         return new VarDeclStmt(this.name, this.type);
     }
+
+    @Override
+    public IDict<String, IType> typecheck(IDict<String, IType> typeEnv) throws Exception {
+        typeEnv.add(name, type);
+        return typeEnv;
+    }
 }

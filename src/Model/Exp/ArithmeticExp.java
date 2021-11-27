@@ -4,6 +4,7 @@ import Model.Adt.IDict;
 import Model.Adt.IHeap;
 import Model.Exceptions.DivisionByZeroError;
 import Model.Exceptions.ExpError;
+import Model.Types.IType;
 import Model.Types.IntType;
 import Model.Value.IValue;
 import Model.Value.IntValue;
@@ -69,5 +70,23 @@ public class ArithmeticExp implements IExp {
     @Override
     public ArithmeticExp deepCopy() {
         return new ArithmeticExp(this.op, this.e1, this.e2);
+    }
+
+    @Override
+    public IType typeCheck(IDict<String, IType> typeEnv) throws Exception {
+        IType type1, type2;
+        type1 = e1.typeCheck(typeEnv);
+        type2 = e2.typeCheck(typeEnv);
+
+        if (type1.equals(new IntType())) {
+            if (type2.equals(new IntType())) {
+                return new IntType();
+            }
+            else {
+                throw new ExpError("Operand 2 is not an integer.");
+            }
+        } else {
+            throw new ExpError("Operand 1 is not an integer.");
+        }
     }
 }

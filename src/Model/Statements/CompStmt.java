@@ -1,8 +1,10 @@
 package Model.Statements;
 
+import Model.Adt.IDict;
 import Model.Exceptions.StmtError;
 import Model.PrgState;
 import Model.Adt.IStack;
+import Model.Types.IType;
 
 public class CompStmt implements IStmt {
     IStmt first;
@@ -29,5 +31,10 @@ public class CompStmt implements IStmt {
     @Override
     public CompStmt deepCopy() {
         return new CompStmt(this.first, this.second);
+    }
+
+    @Override
+    public IDict<String, IType> typecheck(IDict<String, IType> typeEnv) throws Exception {
+        return second.typecheck(typeEnv);
     }
 }

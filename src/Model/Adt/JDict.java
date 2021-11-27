@@ -53,4 +53,14 @@ public class JDict<T1, T2> implements IDict<T1, T2> {
 
         return strBuilder.toString();
     }
+
+    @Override
+    public IDict<T1, T2> deepCopy() {
+        IDict<T1, T2> copy = new JDict<>();
+        for (T1 key : this.getContent().keySet()) {
+            copy.add(key, this.getContent().get(key));
+        }
+
+        return copy;
+    }
 }

@@ -3,6 +3,7 @@ import Model.Adt.IDict;
 import Model.Adt.IHeap;
 import Model.Exceptions.ExpError;
 import Model.Exceptions.UndefinedError;
+import Model.Types.IType;
 import Model.Value.IValue;
 
 public class VarExp implements IExp{
@@ -27,5 +28,10 @@ public class VarExp implements IExp{
     @Override
     public VarExp deepCopy() {
         return new VarExp(this.id);
+    }
+
+    @Override
+    public IType typeCheck(IDict<String, IType> typeEnv) throws Exception {
+        return typeEnv.lookup(id);
     }
 }

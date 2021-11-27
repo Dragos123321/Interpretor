@@ -4,6 +4,7 @@ import Model.Adt.IDict;
 import Model.Adt.IHeap;
 import Model.Exceptions.ExpError;
 import Model.Types.BoolType;
+import Model.Types.IType;
 import Model.Types.IntType;
 import Model.Value.BoolValue;
 import Model.Value.IValue;
@@ -64,5 +65,23 @@ public class LogicExp implements IExp {
     @Override
     public LogicExp deepCopy() {
         return new LogicExp(this.op, this.e1, this.e2);
+    }
+
+    @Override
+    public IType typeCheck(IDict<String, IType> typeEnv) throws Exception {
+        IType type1, type2;
+        type1 = e1.typeCheck(typeEnv);
+        type2 = e2.typeCheck(typeEnv);
+
+        if (type1.equals(new BoolType())) {
+            if (type2.equals(new BoolType())) {
+                return new BoolType();
+            }
+            else {
+                throw new ExpError("Operand 2 is not a boolean.");
+            }
+        } else {
+            throw new ExpError("Operand 1 is not a boolean.");
+        }
     }
 }

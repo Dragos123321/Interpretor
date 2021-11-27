@@ -1,12 +1,24 @@
 package Model.Adt;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Vector;
 
 public class JList<T> implements IList<T> {
-    Vector<T> list;
+    List<T> list;
 
     public JList() {
-        list = new Vector<T>();
+        list = new ArrayList<>();
+    }
+
+    @Override
+    public List<T> getInner() {
+        return list;
+    }
+
+    @Override
+    public void setList(List<T> newList) {
+        this.list = newList;
     }
 
     @Override
@@ -19,10 +31,12 @@ public class JList<T> implements IList<T> {
         return list.remove(list.size() - 1);
     }
 
+    @Override
     public T getFirstElement() {
-        return this.list.lastElement();
+        return this.list.get(0);
     }
 
+    @Override
     public T getLastElement() {
         return this.list.get(this.list.size() - 1);
     }

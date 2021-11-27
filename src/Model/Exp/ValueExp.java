@@ -3,6 +3,7 @@ package Model.Exp;
 import Model.Adt.IDict;
 import Model.Adt.IHeap;
 import Model.Exceptions.ExpError;
+import Model.Types.IType;
 import Model.Value.IValue;
 
 public class ValueExp implements IExp{
@@ -25,5 +26,10 @@ public class ValueExp implements IExp{
     @Override
     public ValueExp deepCopy() {
         return new ValueExp(this.elem);
+    }
+
+    @Override
+    public IType typeCheck(IDict<String, IType> typeEnv) throws Exception {
+        return elem.getType();
     }
 }

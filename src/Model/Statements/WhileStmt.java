@@ -1,11 +1,13 @@
 package Model.Statements;
 
+import Model.Adt.IDict;
 import Model.Adt.IStack;
 import Model.Exceptions.ExpError;
 import Model.Exceptions.StmtError;
 import Model.Exp.IExp;
 import Model.PrgState;
 import Model.Types.BoolType;
+import Model.Types.IType;
 import Model.Value.BoolValue;
 import Model.Value.IValue;
 
@@ -50,5 +52,16 @@ public class WhileStmt implements IStmt {
     @Override
     public String toString() {
         return "while(" + exp.toString() + ") " + statement.toString();
+    }
+
+    @Override
+    public IDict<String, IType> typecheck(IDict<String, IType> typeEnv) throws Exception {
+        IType type_exp = exp.typeCheck(typeEnv);
+        if (type_exp.equals(new BoolType())) {
+            statement.typecheck(typeEnv.deepCopy());
+            return typeEnv;
+        } else {
+            throw new StmtError("The condition of WHILE is not of type boolean");
+        }
     }
 }

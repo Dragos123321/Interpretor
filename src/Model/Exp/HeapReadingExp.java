@@ -3,10 +3,7 @@ package Model.Exp;
 import Model.Adt.IDict;
 import Model.Adt.IHeap;
 import Model.Exceptions.ExpError;
-import Model.Types.BoolType;
-import Model.Types.IntType;
-import Model.Types.RefType;
-import Model.Types.StringType;
+import Model.Types.*;
 import Model.Value.IValue;
 import Model.Value.RefValue;
 
@@ -39,6 +36,18 @@ public class HeapReadingExp implements IExp {
     @Override
     public IExp deepCopy() {
         return new HeapReadingExp(exp);
+    }
+
+    @Override
+    public IType typeCheck(IDict<String, IType> typeEnv) throws Exception {
+        IType type = exp.typeCheck(typeEnv);
+
+        if (type instanceof RefType) {
+            RefType ref_type = (RefType) type;
+            return ref_type.getInner();
+        } else {
+            throw new ExpError("Expression " + exp.toString() + " is not a reference value.");
+        }
     }
 
     @Override

@@ -1,9 +1,8 @@
 package Controller;
+
 import Model.Adt.IList;
-import Model.Exceptions.ControllerError;
+import Model.Adt.JList;
 import Model.PrgState;
-import Model.Adt.IStack;
-import Model.Statements.IStmt;
 import Model.Value.IValue;
 import Model.Value.RefValue;
 import Repo.IRepo;
@@ -12,10 +11,16 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
 public class Controller {
     private final IRepo repo;
+    private ExecutorService executor;
 
     public Controller(IRepo repo) {
         this.repo = repo;
@@ -25,50 +30,83 @@ public class Controller {
         repo.addPrg(newPrg);
     }
 
-    public PrgState oneStep(PrgState state) throws ControllerError {
-        IStack<IStmt> stack = state.getExeStack();
-        IStmt crtStmt = stack.pop();
+    private void oneStepForAllProgram(IList<PrgState> programs) throws InterruptedException {
+        programs.getInner().forEach(prg -> {
+            try {
+                repo.logPrgStateExec(prg);
+            } catch (IOException err) {
+                err.printStackTrace();
+            }
+        });
 
-        PrgState new_statement = null;
-        try {
-            new_statement = crtStmt.execute(state);
-        } catch (Exception err) {
-            throw new ControllerError(err.getMessage());
-        }
+        List<Callable<PrgState>> callList = programs.getInner().stream().filter(PrgState::isNotCompleted)
+                .map((PrgState prg) -> (Callable<PrgState>) (() -> {
+                    try {
+                        return prg.oneStep();
+                    } catch (Exception err) {
+                        System.out.println(err.getMessage());
+                        return null;
+                    }
+                })).collect(Collectors.toList());
 
-        return new_statement;
+        List<PrgState> newProgramList = executor.invokeAll(callList).stream()
+                .map(future -> {
+                    try {
+                        return future.get();
+                    } catch (InterruptedException | ExecutionException err) {
+                        System.out.println("End of program");
+                    }
+                    return null;
+                }).filter(Objects::nonNull).collect(Collectors.toList());
+
+        programs.getInner().addAll(newProgramList);
+        programs.getInner().forEach(prg -> {
+            prg.getHeap().setContent(garbage_collector(get_used_addresses(prg.getSymTable().getContent().values(),
+                    prg.getHeap().getContent().values()), prg.getHeap().getContent()));
+        });
+
+        programs.getInner().forEach(prg -> {
+            try {
+                repo.logPrgStateExec(prg);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+        repo.setPrgList(programs);
     }
 
     public void allStep() {
-        PrgState prg = repo.getCrtPrg();
+        executor = Executors.newFixedThreadPool(2);
+        IList<PrgState> programs = new JList<>();
+        programs.setList(removeCompletedPrg(repo.getPrgList()));
         try {
-            repo.logPrgStateExec();
-            while (!prg.getExeStack().isEmpty()) {
-                try {
-                    PrgState new_state = oneStep(prg);
-                    prg.getHeap().setContent(garbage_collector(get_used_addresses(prg.getSymTable().getContent().values(),
-                            prg.getHeap().getContent().values()), prg.getHeap().getContent()));
-                    repo.logPrgStateExec();
-                } catch (Exception err) {
-                    System.err.println(err.getMessage());
-                }
+            while (programs.getInner().size() > 0) {
+                oneStepForAllProgram(programs);
+                programs.setList(removeCompletedPrg(repo.getPrgList()));
             }
-        } catch (IOException err) {
-            System.err.println(err.getMessage());
+        } catch (InterruptedException err) {
+            System.out.println(err.getMessage());
+            System.exit(1);
         }
+        executor.shutdownNow();
+        repo.setPrgList(programs);
     }
 
     private List<Integer> get_used_addresses(Collection<IValue> symTableValues, Collection<IValue> heapTableValues) {
         List<Integer> symTableAddresses = symTableValues.stream()
                 .filter(v -> v instanceof RefValue)
-                .map(value -> {RefValue value2 = (RefValue)value;
-                    return value2.getValue();})
+                .map(value -> {
+                    RefValue value2 = (RefValue) value;
+                    return value2.getValue();
+                })
                 .collect(Collectors.toList());
 
         List<Integer> heapTableAddresses = heapTableValues.stream()
                 .filter(v -> v instanceof RefValue)
-                .map(value -> {RefValue value2 = (RefValue)value;
-                    return value2.getValue();})
+                .map(value -> {
+                    RefValue value2 = (RefValue) value;
+                    return value2.getValue();
+                })
                 .collect(Collectors.toList());
 
         symTableAddresses.addAll(heapTableAddresses);
@@ -79,5 +117,11 @@ public class Controller {
         return heap.entrySet().stream()
                 .filter(e -> symTableAddr.contains(e.getKey()))
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+    }
+
+    List<PrgState> removeCompletedPrg(IList<PrgState> inPrgList) {
+        return inPrgList.getInner().stream()
+                .filter(PrgState::isNotCompleted)
+                .collect(Collectors.toList());
     }
 }

@@ -7,6 +7,7 @@ import Model.Adt.IDict;
 import Model.Adt.IStack;
 import Model.Exp.IExp;
 import Model.Types.BoolType;
+import Model.Types.IType;
 import Model.Value.BoolValue;
 import Model.Value.IValue;
 
@@ -53,5 +54,17 @@ public class IfStmt implements IStmt {
     @Override
     public IfStmt deepCopy() {
         return new IfStmt(this.exp, this.first, this.second);
+    }
+
+    @Override
+    public IDict<String, IType> typecheck(IDict<String, IType> typeEnv) throws Exception {
+        IType type_exp = exp.typeCheck(typeEnv);
+        if (type_exp.equals(new BoolType())) {
+            first.typecheck(typeEnv.deepCopy());
+            second.typecheck(typeEnv.deepCopy());
+            return typeEnv;
+        } else {
+            throw new StmtError("The condition of IF is not of type boolean");
+        }
     }
 }

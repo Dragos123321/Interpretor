@@ -6,10 +6,7 @@ import Model.Exceptions.ExpError;
 import Model.Exceptions.StmtError;
 import Model.Exp.IExp;
 import Model.PrgState;
-import Model.Types.BoolType;
-import Model.Types.IntType;
-import Model.Types.RefType;
-import Model.Types.StringType;
+import Model.Types.*;
 import Model.Value.IValue;
 import Model.Value.RefValue;
 
@@ -57,6 +54,17 @@ public class HeapAllocStmt implements IStmt {
     @Override
     public IStmt deepCopy() {
         return new HeapAllocStmt(var_name, exp);
+    }
+
+    @Override
+    public IDict<String, IType> typecheck(IDict<String, IType> typeEnv) throws Exception {
+        IType type_var = typeEnv.lookup(var_name);
+        IType type_exp = exp.typeCheck(typeEnv);
+
+        if (type_var.equals(new RefType(type_exp)))
+            return typeEnv;
+        else
+            throw new StmtError("NEW stmt: right hand side and left hand side have different types ");
     }
 
     @Override
