@@ -1,11 +1,9 @@
 package Model.Statements;
 
 import Model.Adt.IDict;
-import Model.Adt.JDict;
 import Model.Adt.JStack;
-import Model.Exceptions.StmtError;
+import Model.Exceptions.*;
 import Model.PrgState;
-import Model.Types.BoolType;
 import Model.Types.IType;
 
 public class ForkStatement implements IStmt {
@@ -16,9 +14,8 @@ public class ForkStatement implements IStmt {
     }
 
     @Override
-    public PrgState execute(PrgState state) throws StmtError {
-        return new PrgState(new JStack<>(), state.getSymTable().deepCopy(), state.getOutput(), state.getFileTable(), state.getHeap(),
-                state.getTypeChecker().deepCopy(), this.statement);
+    public PrgState execute(PrgState state) throws StmtError, TypeMismatch, DivisionByZeroError, NotRefError, UndefinedVariable, FileNotOpenedError, InvalidMemoryAddressError {
+        return new PrgState(new JStack<>(), state.getSymTable().deepCopy(), state.getOutput(), state.getFileTable(), state.getHeap(), this.statement);
     }
 
     @Override
@@ -32,7 +29,7 @@ public class ForkStatement implements IStmt {
     }
 
     @Override
-    public IDict<String, IType> typecheck(IDict<String, IType> typeEnv) throws Exception {
+    public IDict<String, IType> typecheck(IDict<String, IType> typeEnv) throws StmtError, TypeMismatch, NotRefError {
         statement.typecheck(typeEnv.deepCopy());
         return typeEnv;
     }

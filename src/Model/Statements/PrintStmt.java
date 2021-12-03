@@ -2,7 +2,7 @@ package Model.Statements;
 
 
 import Model.Adt.IDict;
-import Model.Exceptions.StmtError;
+import Model.Exceptions.*;
 import Model.PrgState;
 import Model.Adt.IList;
 import Model.Exp.IExp;
@@ -22,7 +22,7 @@ public class PrintStmt implements IStmt{
         return "print(" + expression.toString() + ")";
     }
 
-    public PrgState execute(PrgState state) throws StmtError {
+    public PrgState execute(PrgState state) throws StmtError, TypeMismatch, DivisionByZeroError, NotRefError, UndefinedVariable, FileNotOpenedError, InvalidMemoryAddressError {
         IList<IValue> output = state.getOutput();
 
         try {
@@ -40,7 +40,7 @@ public class PrintStmt implements IStmt{
     }
 
     @Override
-    public IDict<String, IType> typecheck(IDict<String, IType> typeEnv) throws Exception {
+    public IDict<String, IType> typecheck(IDict<String, IType> typeEnv) throws StmtError, TypeMismatch, NotRefError {
         expression.typeCheck(typeEnv);
         return typeEnv;
     }

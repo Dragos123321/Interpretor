@@ -2,8 +2,7 @@ package Model.Statements;
 
 import Model.Adt.IDict;
 import Model.Adt.IStack;
-import Model.Exceptions.ExpError;
-import Model.Exceptions.StmtError;
+import Model.Exceptions.*;
 import Model.Exp.IExp;
 import Model.PrgState;
 import Model.Types.BoolType;
@@ -21,7 +20,7 @@ public class WhileStmt implements IStmt {
     }
 
     @Override
-    public PrgState execute(PrgState state) throws StmtError {
+    public PrgState execute(PrgState state) throws StmtError, TypeMismatch, DivisionByZeroError, NotRefError, UndefinedVariable, FileNotOpenedError, InvalidMemoryAddressError {
         IStack<IStmt> stack = state.getExeStack();
 
         try {
@@ -34,7 +33,7 @@ public class WhileStmt implements IStmt {
                 }
             }
             else {
-                throw new StmtError(exp.toString() + " is not evaluated to boolean");
+                throw new TypeMismatch(exp.toString() + " is not evaluated to boolean");
             }
         }
         catch(ExpError err) {
@@ -55,13 +54,13 @@ public class WhileStmt implements IStmt {
     }
 
     @Override
-    public IDict<String, IType> typecheck(IDict<String, IType> typeEnv) throws Exception {
+    public IDict<String, IType> typecheck(IDict<String, IType> typeEnv) throws StmtError, TypeMismatch, NotRefError {
         IType type_exp = exp.typeCheck(typeEnv);
         if (type_exp.equals(new BoolType())) {
             statement.typecheck(typeEnv.deepCopy());
             return typeEnv;
         } else {
-            throw new StmtError("The condition of WHILE is not of type boolean");
+            throw new TypeMismatch("The condition of WHILE is not of type boolean");
         }
     }
 }

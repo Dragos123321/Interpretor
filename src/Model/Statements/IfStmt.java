@@ -1,7 +1,9 @@
 package Model.Statements;
 
 import Model.Adt.IHeap;
+import Model.Exceptions.NotRefError;
 import Model.Exceptions.StmtError;
+import Model.Exceptions.TypeMismatch;
 import Model.PrgState;
 import Model.Adt.IDict;
 import Model.Adt.IStack;
@@ -57,14 +59,14 @@ public class IfStmt implements IStmt {
     }
 
     @Override
-    public IDict<String, IType> typecheck(IDict<String, IType> typeEnv) throws Exception {
+    public IDict<String, IType> typecheck(IDict<String, IType> typeEnv) throws StmtError, TypeMismatch, NotRefError {
         IType type_exp = exp.typeCheck(typeEnv);
         if (type_exp.equals(new BoolType())) {
             first.typecheck(typeEnv.deepCopy());
             second.typecheck(typeEnv.deepCopy());
             return typeEnv;
         } else {
-            throw new StmtError("The condition of IF is not of type boolean");
+            throw new TypeMismatch("The condition of IF is not of type boolean");
         }
     }
 }

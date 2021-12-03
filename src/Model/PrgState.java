@@ -19,12 +19,11 @@ public class PrgState {
     IDict<String, BufferedReader> fileTable;
     IHeap<IValue> heap;
     IStmt originalProgram; //optional field, but good to have
-    IDict<String, IType> typeChecker;
     private static int current_id = 1;
     private int thread_id;
 
     public PrgState(IStack<IStmt> stack, IDict<String, IValue> symTable, IList<IValue> out,
-                    IDict<String, BufferedReader> fileTable, IHeap<IValue> heap, IDict<String, IType> typeChecker,
+                    IDict<String, BufferedReader> fileTable, IHeap<IValue> heap,
                     IStmt originalProgram) {
         this.exeStack = stack;
         this.symTable = symTable;
@@ -32,14 +31,6 @@ public class PrgState {
         this.fileTable = fileTable;
         this.originalProgram = originalProgram;
         this.heap = heap;
-        this.typeChecker = typeChecker;
-
-        try {
-            originalProgram.typecheck(this.typeChecker);
-        } catch (Exception err) {
-            System.out.println(err.getMessage());
-            System.exit(1);
-        }
 
         setID();
 
@@ -65,10 +56,6 @@ public class PrgState {
 
     public IDict<String, IValue> getSymTable() {
         return this.symTable;
-    }
-
-    public IDict<String, IType> getTypeChecker() {
-        return this.typeChecker;
     }
 
     public IDict<String, BufferedReader> getFileTable() {

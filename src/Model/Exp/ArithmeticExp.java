@@ -4,6 +4,8 @@ import Model.Adt.IDict;
 import Model.Adt.IHeap;
 import Model.Exceptions.DivisionByZeroError;
 import Model.Exceptions.ExpError;
+import Model.Exceptions.NotRefError;
+import Model.Exceptions.TypeMismatch;
 import Model.Types.IType;
 import Model.Types.IntType;
 import Model.Value.IValue;
@@ -19,7 +21,7 @@ public class ArithmeticExp implements IExp {
         this.op = op;
     }
 
-    public IValue eval(IDict<String, IValue> symTable, IHeap<IValue> heap) throws ExpError {
+    public IValue eval(IDict<String, IValue> symTable, IHeap<IValue> heap) throws ExpError, TypeMismatch, DivisionByZeroError, NotRefError {
         IValue v1, v2;
         v1 = e1.eval(symTable, heap);
         if (v1.getType().equals(new IntType())) {
@@ -44,11 +46,11 @@ public class ArithmeticExp implements IExp {
                         }
                 }
             } else {
-                throw new ExpError("Operand 2 is not an integer.");
+                throw new TypeMismatch("Operand 2 is not an integer.");
             }
         }
 
-        throw new ExpError("Operand 1 is not an integer.");
+        throw new TypeMismatch("Operand 1 is not an integer.");
     }
 
     public char getOp() {
@@ -73,7 +75,7 @@ public class ArithmeticExp implements IExp {
     }
 
     @Override
-    public IType typeCheck(IDict<String, IType> typeEnv) throws Exception {
+    public IType typeCheck(IDict<String, IType> typeEnv) throws TypeMismatch, NotRefError {
         IType type1, type2;
         type1 = e1.typeCheck(typeEnv);
         type2 = e2.typeCheck(typeEnv);
@@ -83,10 +85,10 @@ public class ArithmeticExp implements IExp {
                 return new IntType();
             }
             else {
-                throw new ExpError("Operand 2 is not an integer.");
+                throw new TypeMismatch("Operand 2 is not an integer.");
             }
         } else {
-            throw new ExpError("Operand 1 is not an integer.");
+            throw new TypeMismatch("Operand 1 is not an integer.");
         }
     }
 }

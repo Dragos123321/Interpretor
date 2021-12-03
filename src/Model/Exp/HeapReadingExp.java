@@ -2,7 +2,10 @@ package Model.Exp;
 
 import Model.Adt.IDict;
 import Model.Adt.IHeap;
+import Model.Exceptions.DivisionByZeroError;
 import Model.Exceptions.ExpError;
+import Model.Exceptions.NotRefError;
+import Model.Exceptions.TypeMismatch;
 import Model.Types.*;
 import Model.Value.IValue;
 import Model.Value.RefValue;
@@ -15,7 +18,7 @@ public class HeapReadingExp implements IExp {
     }
 
     @Override
-    public IValue eval(IDict<String, IValue> symTable, IHeap<IValue> heap) throws ExpError {
+    public IValue eval(IDict<String, IValue> symTable, IHeap<IValue> heap) throws TypeMismatch, DivisionByZeroError, ExpError, NotRefError {
         IValue val;
         val = this.exp.eval(symTable, heap);
         if (val.isRefType()) {
@@ -29,7 +32,7 @@ public class HeapReadingExp implements IExp {
             }
         }
         else {
-            throw new ExpError("Expression is not a reference value.");
+            throw new NotRefError();
         }
     }
 
@@ -39,14 +42,13 @@ public class HeapReadingExp implements IExp {
     }
 
     @Override
-    public IType typeCheck(IDict<String, IType> typeEnv) throws Exception {
+    public IType typeCheck(IDict<String, IType> typeEnv) throws NotRefError, TypeMismatch {
         IType type = exp.typeCheck(typeEnv);
 
-        if (type instanceof RefType) {
-            RefType ref_type = (RefType) type;
+        if (type instanceof RefType ref_type) {
             return ref_type.getInner();
         } else {
-            throw new ExpError("Expression " + exp.toString() + " is not a reference value.");
+            throw new NotRefError();
         }
     }
 

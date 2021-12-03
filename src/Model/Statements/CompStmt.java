@@ -1,7 +1,7 @@
 package Model.Statements;
 
 import Model.Adt.IDict;
-import Model.Exceptions.StmtError;
+import Model.Exceptions.*;
 import Model.PrgState;
 import Model.Adt.IStack;
 import Model.Types.IType;
@@ -21,7 +21,7 @@ public class CompStmt implements IStmt {
     }
 
     @Override
-    public PrgState execute(PrgState state) throws StmtError {
+    public PrgState execute(PrgState state) throws StmtError, TypeMismatch, DivisionByZeroError, NotRefError, UndefinedVariable, FileNotOpenedError, InvalidMemoryAddressError {
         IStack<IStmt> stack = state.getExeStack();
         stack.push(second);
         stack.push(first);
@@ -34,7 +34,7 @@ public class CompStmt implements IStmt {
     }
 
     @Override
-    public IDict<String, IType> typecheck(IDict<String, IType> typeEnv) throws Exception {
-        return second.typecheck(typeEnv);
+    public IDict<String, IType> typecheck(IDict<String, IType> typeEnv) throws StmtError, TypeMismatch, NotRefError {
+        return second.typecheck(first.typecheck(typeEnv));
     }
 }

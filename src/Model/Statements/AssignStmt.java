@@ -1,7 +1,7 @@
 package Model.Statements;
 
 import Model.Adt.IHeap;
-import Model.Exceptions.StmtError;
+import Model.Exceptions.*;
 import Model.PrgState;
 import Model.Adt.IDict;
 import Model.Exp.IExp;
@@ -23,7 +23,7 @@ public class AssignStmt implements IStmt{
         return this.id + "=" + this.expression.toString();
     }
 
-    public PrgState execute(PrgState state) throws StmtError {
+    public PrgState execute(PrgState state) throws StmtError, TypeMismatch, DivisionByZeroError, NotRefError, UndefinedVariable, FileNotOpenedError, InvalidMemoryAddressError {
         IDict<String, IValue> symTable = state.getSymTable();
         IHeap<IValue> heap = state.getHeap();
 
@@ -34,13 +34,13 @@ public class AssignStmt implements IStmt{
                 if (val.getType().equals(type)) {
                     symTable.update(id, val);
                 } else {
-                    throw new StmtError("Type of expression and type of variable do not match.");
+                    throw new TypeMismatch("Type of expression and type of variable do not match.");
                 }
             } catch (Exception err) {
                 throw new StmtError(err.getMessage());
             }
         } else {
-            throw new StmtError("Variable " + id.toString() + " is not defined.");
+            throw new UndefinedVariable("Variable " + id.toString() + " is not defined.");
         }
 
         return state;
@@ -52,13 +52,13 @@ public class AssignStmt implements IStmt{
     }
 
     @Override
-    public IDict<String, IType> typecheck(IDict<String, IType> typeEnv) throws Exception {
+    public IDict<String, IType> typecheck(IDict<String, IType> typeEnv) throws StmtError, TypeMismatch, NotRefError {
         IType type_var = typeEnv.lookup(id);
         IType type_exp = expression.typeCheck(typeEnv);
         if (type_var.equals(type_exp)) {
             return typeEnv;
         } else {
-            throw new StmtError("Assignment: right hand side and left hand side have different types.");
+            throw new TypeMismatch("Assignment: right hand side and left hand side have different types.");
         }
     }
 }

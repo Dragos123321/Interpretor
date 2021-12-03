@@ -2,19 +2,15 @@ package Model.Statements;
 
 import Model.Adt.IDict;
 import Model.Adt.IHeap;
-import Model.Exceptions.ExpError;
-import Model.Exceptions.StmtError;
+import Model.Exceptions.*;
 import Model.Exp.IExp;
 import Model.PrgState;
-import Model.Types.BoolType;
 import Model.Types.IType;
 import Model.Types.StringType;
 import Model.Value.IValue;
 import Model.Value.StringValue;
 
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 
 public class closeRFile implements IStmt {
@@ -27,7 +23,7 @@ public class closeRFile implements IStmt {
     }
 
     @Override
-    public PrgState execute(PrgState state) throws StmtError {
+    public PrgState execute(PrgState state) throws StmtError, TypeMismatch, DivisionByZeroError, NotRefError, UndefinedVariable, FileNotOpenedError, InvalidMemoryAddressError {
         IDict<String, IValue> symTable = state.getSymTable();
         IHeap<IValue> heap = state.getHeap();
 
@@ -50,7 +46,7 @@ public class closeRFile implements IStmt {
                         throw new StmtError(err.getMessage());
                     }
                 } else {
-                    throw new StmtError("File " + filepath + " is not open.");
+                    throw new FileNotOpenedError("File " + filepath + " is not open.");
                 }
             }
             else {
@@ -74,12 +70,12 @@ public class closeRFile implements IStmt {
     }
 
     @Override
-    public IDict<String, IType> typecheck(IDict<String, IType> typeEnv) throws Exception {
+    public IDict<String, IType> typecheck(IDict<String, IType> typeEnv) throws StmtError, TypeMismatch, NotRefError {
         IType type_exp = expression.typeCheck(typeEnv);
         if (type_exp.equals(new StringType())) {
             return typeEnv;
         } else {
-            throw new StmtError("The expression of READ is not of type string");
+            throw new TypeMismatch("The expression of READ is not of type string");
         }
     }
 }

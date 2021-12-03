@@ -1,7 +1,7 @@
 package Model.Statements;
 
 
-import Model.Exceptions.StmtError;
+import Model.Exceptions.*;
 import Model.PrgState;
 import Model.Adt.IDict;
 import Model.Types.IType;
@@ -17,7 +17,7 @@ public class VarDeclStmt implements IStmt{
     }
 
     @Override
-    public PrgState execute(PrgState state) throws StmtError {
+    public PrgState execute(PrgState state) throws StmtError, TypeMismatch, DivisionByZeroError, NotRefError, UndefinedVariable, FileNotOpenedError, InvalidMemoryAddressError {
         IDict<String, IValue> symTable = state.getSymTable();
 
         if (!symTable.isDefined(name)) {
@@ -40,7 +40,7 @@ public class VarDeclStmt implements IStmt{
     }
 
     @Override
-    public IDict<String, IType> typecheck(IDict<String, IType> typeEnv) throws Exception {
+    public IDict<String, IType> typecheck(IDict<String, IType> typeEnv) throws StmtError, TypeMismatch, NotRefError {
         typeEnv.add(name, type);
         return typeEnv;
     }

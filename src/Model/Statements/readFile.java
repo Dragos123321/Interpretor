@@ -2,8 +2,7 @@ package Model.Statements;
 
 import Model.Adt.IDict;
 import Model.Adt.IHeap;
-import Model.Exceptions.ExpError;
-import Model.Exceptions.StmtError;
+import Model.Exceptions.*;
 import Model.Exp.IExp;
 import Model.PrgState;
 import Model.Types.IType;
@@ -29,18 +28,18 @@ public class readFile implements IStmt {
     }
 
     @Override
-    public PrgState execute(PrgState state) throws StmtError {
+    public PrgState execute(PrgState state) throws StmtError, TypeMismatch, DivisionByZeroError, NotRefError, UndefinedVariable, FileNotOpenedError, InvalidMemoryAddressError {
         IDict<String, IValue> symTable = state.getSymTable();
         IDict<String, BufferedReader> fileTable = state.getFileTable();
         IHeap<IValue> heap = state.getHeap();
 
         IValue var = symTable.lookup(var_name);
         if (var == null) {
-            throw new StmtError(var_name + " is not defined.");
+            throw new UndefinedVariable(var_name + " is not defined.");
         }
 
         if (!var.getType().equals(new IntType())) {
-            throw new StmtError(var_name + " is not an integer.");
+            throw new TypeMismatch(var_name + " is not an integer.");
         }
 
         IntValue ivar = (IntValue) var;
@@ -49,7 +48,7 @@ public class readFile implements IStmt {
             IValue expr_value = this.expression.eval(symTable, heap);
 
             if (!expr_value.getType().equals(new StringType())) {
-                throw new StmtError("Expression does not evaluate to string.");
+                throw new TypeMismatch("Expression does not evaluate to string.");
             }
 
             StringValue str_value = (StringValue)expr_value;
@@ -58,7 +57,7 @@ public class readFile implements IStmt {
 
             BufferedReader reader = fileTable.lookup(filePath);
             if (reader == null) {
-                throw new StmtError(filePath + " is not open for reading");
+                throw new FileNotOpenedError(filePath + " is not open for reading");
             }
 
             try {
@@ -95,7 +94,7 @@ public class readFile implements IStmt {
     }
 
     @Override
-    public IDict<String, IType> typecheck(IDict<String, IType> typeEnv) throws Exception {
+    public IDict<String, IType> typecheck(IDict<String, IType> typeEnv) throws StmtError, TypeMismatch, NotRefError {
         IType type_exp = expression.typeCheck(typeEnv);
         if (type_exp.equals(new StringType())) {
             return typeEnv;

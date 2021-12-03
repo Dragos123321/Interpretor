@@ -2,8 +2,7 @@ package Model.Statements;
 
 import Model.Adt.IDict;
 import Model.Adt.IHeap;
-import Model.Exceptions.ExpError;
-import Model.Exceptions.StmtError;
+import Model.Exceptions.*;
 import Model.Exp.IExp;
 import Model.PrgState;
 import Model.Types.IType;
@@ -25,7 +24,7 @@ public class openRFile implements IStmt {
     }
 
     @Override
-    public PrgState execute(PrgState state) throws StmtError {
+    public PrgState execute(PrgState state) throws StmtError, TypeMismatch, DivisionByZeroError, NotRefError, UndefinedVariable, FileNotOpenedError, InvalidMemoryAddressError {
         IDict<String, IValue> symTable = state.getSymTable();
         IHeap<IValue> heap = state.getHeap();
 
@@ -44,7 +43,7 @@ public class openRFile implements IStmt {
                         BufferedReader reader = new BufferedReader(in);
                         fileTable.add(filepath, reader);
                     } catch (FileNotFoundException err) {
-                        throw new StmtError("File " + filepath + " not found.");
+                        throw new FileNotOpenedError("File " + filepath + " not found.");
                     }
                 } else {
                     throw new StmtError("File already exists.");
@@ -69,12 +68,12 @@ public class openRFile implements IStmt {
     }
 
     @Override
-    public IDict<String, IType> typecheck(IDict<String, IType> typeEnv) throws Exception {
+    public IDict<String, IType> typecheck(IDict<String, IType> typeEnv) throws StmtError, TypeMismatch, NotRefError {
         IType type_exp = expression.typeCheck(typeEnv);
         if (type_exp.equals(new StringType())) {
             return typeEnv;
         } else {
-            throw new StmtError("The expression of OPEN is not of type string");
+            throw new TypeMismatch("The expression of OPEN is not of type string");
         }
     }
 }

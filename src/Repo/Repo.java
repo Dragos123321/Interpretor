@@ -46,6 +46,7 @@ public class Repo implements IRepo {
             logFile = new PrintWriter(new BufferedWriter(new FileWriter(logFilePath, true)));
         }
 
+        logFile.println("-------------------------------------------------------");
         logFile.print("Thread id: ");
         logFile.println(state.getID());
         logFile.println("ExeStack:");
@@ -58,6 +59,7 @@ public class Repo implements IRepo {
         logFile.println(state.getFileTable().toString());
         logFile.println("Heap:");
         logFile.println(state.getHeap().toString());
+        logFile.println("-------------------------------------------------------");
 
         logFile.close();
     }

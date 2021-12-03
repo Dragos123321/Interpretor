@@ -2,8 +2,7 @@ package Model.Statements;
 
 import Model.Adt.IDict;
 import Model.Adt.IHeap;
-import Model.Exceptions.ExpError;
-import Model.Exceptions.StmtError;
+import Model.Exceptions.*;
 import Model.Exp.IExp;
 import Model.PrgState;
 import Model.Types.IType;
@@ -21,7 +20,7 @@ public class HeapWriteStmt implements IStmt {
     }
 
     @Override
-    public PrgState execute(PrgState state) throws StmtError {
+    public PrgState execute(PrgState state) throws StmtError, TypeMismatch, DivisionByZeroError, NotRefError, UndefinedVariable, FileNotOpenedError, InvalidMemoryAddressError {
         IDict<String, IValue> symTable = state.getSymTable();
         IHeap<IValue> heap = state.getHeap();
 
@@ -44,15 +43,15 @@ public class HeapWriteStmt implements IStmt {
                     }
                 }
                 else {
-                    throw new StmtError(r_val1.getValue() + " is not a valid memory address");
+                    throw new InvalidMemoryAddressError(r_val1.getValue() + " is not a valid memory address");
                 }
             }
             else {
-                throw new StmtError(var_name + " is not a reference type.");
+                throw new NotRefError();
             }
         }
         else {
-            throw new StmtError(var_name + " is not defined.");
+            throw new UndefinedVariable(var_name + " is not defined.");
         }
         return state;
     }
@@ -68,13 +67,13 @@ public class HeapWriteStmt implements IStmt {
     }
 
     @Override
-    public IDict<String, IType> typecheck(IDict<String, IType> typeEnv) throws Exception {
+    public IDict<String, IType> typecheck(IDict<String, IType> typeEnv) throws StmtError, TypeMismatch, NotRefError {
         IType type_var = typeEnv.lookup(var_name);
         IType type_exp = exp.typeCheck(typeEnv);
 
         if (type_var.equals(new RefType(type_exp)))
             return typeEnv;
         else
-            throw new StmtError("WRITE stmt: right hand side and left hand side have different types ");
+            throw new TypeMismatch("WRITE stmt: right hand side and left hand side have different types ");
     }
 }
