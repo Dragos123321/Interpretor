@@ -12,11 +12,6 @@ public class JList<T> implements IList<T> {
     }
 
     @Override
-    public List<T> getInner() {
-        return list;
-    }
-
-    @Override
     public void setList(List<T> newList) {
         this.list = newList;
     }

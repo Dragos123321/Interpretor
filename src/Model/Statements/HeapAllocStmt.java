@@ -47,7 +47,7 @@ public class HeapAllocStmt implements IStmt {
         else {
             throw new UndefinedVariable(var_name + " is not defined.");
         }
-        return state;
+        return null;
     }
 
     @Override

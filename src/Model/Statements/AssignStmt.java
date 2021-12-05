@@ -43,7 +43,7 @@ public class AssignStmt implements IStmt{
             throw new UndefinedVariable("Variable " + id.toString() + " is not defined.");
         }
 
-        return state;
+        return null;
     }
 
     @Override

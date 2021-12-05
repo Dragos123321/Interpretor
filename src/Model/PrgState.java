@@ -29,12 +29,10 @@ public class PrgState {
         this.symTable = symTable;
         this.out = out;
         this.fileTable = fileTable;
+        this.exeStack.push(originalProgram);
         this.originalProgram = originalProgram;
         this.heap = heap;
-
         setID();
-
-        this.exeStack.push(this.originalProgram);
     }
 
     public int getID() {
@@ -104,13 +102,10 @@ public class PrgState {
             throw new ControllerError("Stack is empty.");
         IStmt crtStmt = exeStack.pop();
 
-        PrgState new_statement = null;
         try {
-            new_statement = crtStmt.execute(this);
+            return crtStmt.execute(this);
         } catch (Exception err) {
             throw new ControllerError(err.getMessage());
         }
-
-        return new_statement;
     }
 }

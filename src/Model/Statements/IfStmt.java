@@ -45,7 +45,7 @@ public class IfStmt implements IStmt {
             throw new StmtError(err.getMessage());
         }
 
-        return state;
+        return null;
     }
 
     @Override

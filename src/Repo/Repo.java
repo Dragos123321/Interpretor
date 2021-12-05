@@ -8,27 +8,29 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Repo implements IRepo {
-    IList<PrgState> mPrgStates;
+    List<PrgState> mPrgStates;
     String logFilePath;
     PrintWriter logFile;
     boolean firstTime;
 
     public Repo(PrgState prgState, String logFilePath) {
-        mPrgStates = new JList<PrgState>();
+        mPrgStates = new ArrayList<PrgState>();
         addPrg(prgState);
         this.logFilePath = logFilePath;
         this.firstTime = true;
     }
 
     @Override
-    public IList<PrgState> getPrgList() {
+    public List<PrgState> getPrgList() {
         return mPrgStates;
     }
 
     @Override
-    public void setPrgList(IList<PrgState> newPrgStates) {
+    public void setPrgList(List<PrgState> newPrgStates) {
         mPrgStates = newPrgStates;
     }
 

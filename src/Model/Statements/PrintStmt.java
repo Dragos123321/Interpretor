@@ -31,7 +31,7 @@ public class PrintStmt implements IStmt{
             throw new StmtError(err.getMessage());
         }
 
-        return state;
+        return null;
     }
 
     @Override

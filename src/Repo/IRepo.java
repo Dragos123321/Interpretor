@@ -3,10 +3,11 @@ import Model.Adt.IList;
 import Model.PrgState;
 
 import java.io.IOException;
+import java.util.List;
 
 public interface IRepo {
     void addPrg(PrgState newPrg);
-    IList<PrgState> getPrgList();
-    void setPrgList(IList<PrgState> newPrgStates);
+    List<PrgState> getPrgList();
+    void setPrgList(List<PrgState> newPrgStates);
     void logPrgStateExec(PrgState state) throws IOException;
 }

@@ -80,7 +80,7 @@ public class readFile implements IStmt {
             throw new StmtError(err.getMessage());
         }
 
-        return state;
+        return null;
     }
 
     @Override

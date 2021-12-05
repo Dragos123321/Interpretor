@@ -56,7 +56,7 @@ public class closeRFile implements IStmt {
         catch(ExpError err) {
             throw new StmtError(err.getMessage());
         }
-        return state;
+        return null;
     }
 
     @Override

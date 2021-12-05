@@ -9,7 +9,6 @@ public interface IList<T> {
     boolean empty();
     T getFirstElement();
     T getLastElement();
-    List<T> getInner();
-    void setList(List<T> newList);
+    public void setList(List<T> newList);
     void clear();
 }

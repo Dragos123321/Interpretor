@@ -8,7 +8,7 @@ import Model.Types.IType;
 public class NopStmt implements IStmt {
 
     public PrgState execute(PrgState state) throws StmtError, TypeMismatch, DivisionByZeroError, NotRefError, UndefinedVariable, FileNotOpenedError, InvalidMemoryAddressError {
-        return state;
+        return null;
     }
 
     @Override
