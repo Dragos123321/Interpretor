@@ -3,6 +3,7 @@ package Model.Adt;
 import java.nio.MappedByteBuffer;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 public class Heap<T> implements IHeap<T> {
     Map<Integer, T> heapTable;
@@ -61,5 +62,10 @@ public class Heap<T> implements IHeap<T> {
         }
 
         return strBuilder.toString();
+    }
+
+    @Override
+    public Set<Map.Entry<Integer, T>> getAll() {
+        return heapTable.entrySet();
     }
 }

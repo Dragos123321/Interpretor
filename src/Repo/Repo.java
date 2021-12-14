@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Repo implements IRepo {
     List<PrgState> mPrgStates;
@@ -27,6 +28,15 @@ public class Repo implements IRepo {
     @Override
     public List<PrgState> getPrgList() {
         return mPrgStates;
+    }
+
+    public PrgState returnByProgramID(int id) {
+        for (var prg : mPrgStates) {
+            if (prg.getID() == id) {
+                return prg;
+            }
+        }
+        return null;
     }
 
     @Override

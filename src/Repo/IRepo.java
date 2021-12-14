@@ -10,4 +10,5 @@ public interface IRepo {
     List<PrgState> getPrgList();
     void setPrgList(List<PrgState> newPrgStates);
     void logPrgStateExec(PrgState state) throws IOException;
+    public PrgState returnByProgramID(int id);
 }

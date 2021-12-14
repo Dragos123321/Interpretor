@@ -11,4 +11,5 @@ public interface IList<T> {
     T getLastElement();
     public void setList(List<T> newList);
     void clear();
+    List<T> getRawList();
 }

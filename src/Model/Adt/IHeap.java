@@ -1,6 +1,7 @@
 package Model.Adt;
 
 import java.util.Map;
+import java.util.Set;
 
 public interface IHeap<T> {
     int add(T value);
@@ -18,4 +19,6 @@ public interface IHeap<T> {
     Map<Integer, T> getContent();
 
     String toString();
+
+    Set<Map.Entry<Integer, T>> getAll();
 }

@@ -1,6 +1,9 @@
 package Model.Adt;
 
+import Model.Statements.IStmt;
+
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class JStack<T> implements IStack<T> {
     Stack<T> stack;
@@ -46,5 +49,10 @@ public class JStack<T> implements IStack<T> {
         }
 
         return strBuilder.toString();
+    }
+
+    @Override
+    public List<T> getAll() {
+        return new ArrayList<>(stack);
     }
 }

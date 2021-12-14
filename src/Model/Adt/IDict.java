@@ -1,6 +1,8 @@
 package Model.Adt;
 
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public interface IDict<T1, T2> {
     void add(T1 v1, T2 v2);
@@ -18,4 +20,6 @@ public interface IDict<T1, T2> {
     String toString();
 
     IDict<T1, T2> deepCopy();
+
+    Set<Map.Entry<T1, T2>> getAll();
 }

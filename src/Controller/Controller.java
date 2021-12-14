@@ -28,14 +28,18 @@ public class Controller {
         repo.addPrg(newPrg);
     }
 
-    private void oneStepForAllProgram(List<PrgState> programs) throws ControllerError {
-        for (PrgState program : programs) {
-            try {
-                repo.logPrgStateExec(program);
-            } catch (IOException error) {
-                throw new ControllerError(error.getMessage());
-            }
-        }
+    public IRepo getRepo() {
+        return repo;
+    }
+
+    public void oneStepForAllProgram(List<PrgState> programs) throws ControllerError {
+//        for (PrgState program : programs) {
+//            try {
+//                repo.logPrgStateExec(program);
+//            } catch (IOException error) {
+//                throw new ControllerError(error.getMessage());
+//            }
+//        }
 
         List<Callable<PrgState>> call_list = programs.stream()
                 .map((PrgState program) -> (Callable<PrgState>) (program::oneStep))
@@ -56,16 +60,39 @@ public class Controller {
 
             programs.addAll(new_programs_list);
 
-            for (PrgState program : programs) {
-                try {
-                    repo.logPrgStateExec(program);
-                } catch (IOException error) {
-                    throw new ControllerError(error.getMessage());
-                }
-            }
+//            for (PrgState program : programs) {
+//                try {
+//                    repo.logPrgStateExec(program);
+//                } catch (IOException error) {
+//                    throw new ControllerError(error.getMessage());
+//                }
+//            }
 
             repo.setPrgList(programs);
         } catch (InterruptedException ignored) {
+        }
+    }
+
+    public void executeOneStep() {
+        executor = Executors.newFixedThreadPool(8);
+
+        removeCompletedPrg(repo.getPrgList());
+        List<PrgState> programStates = repo.getPrgList();
+        if (programStates.size() > 0) {
+            try {
+                oneStepForAllProgram(repo.getPrgList());
+            } catch (ControllerError err) {
+                System.out.println(err.getMessage());
+            }
+            programStates.forEach(prg -> {
+                try {
+                    repo.logPrgStateExec(prg);
+                } catch (IOException err) {
+                    System.out.println(err.getMessage());
+                }
+            });
+            removeCompletedPrg(repo.getPrgList());
+            executor.shutdownNow();
         }
     }
 

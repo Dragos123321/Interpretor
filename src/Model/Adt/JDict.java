@@ -1,7 +1,6 @@
 package Model.Adt;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class JDict<T1, T2> implements IDict<T1, T2> {
     Map<T1, T2> dictionary;
@@ -62,5 +61,10 @@ public class JDict<T1, T2> implements IDict<T1, T2> {
         }
 
         return copy;
+    }
+
+    @Override
+    public Set<Map.Entry<T1, T2>> getAll() {
+        return dictionary.entrySet();
     }
 }

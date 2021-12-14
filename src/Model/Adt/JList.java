@@ -47,6 +47,11 @@ public class JList<T> implements IList<T> {
     }
 
     @Override
+    public List<T> getRawList() {
+        return list;
+    }
+
+    @Override
     public String toString() {
         StringBuilder strBuilder = new StringBuilder();
 
