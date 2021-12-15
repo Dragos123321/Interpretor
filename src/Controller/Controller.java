@@ -33,13 +33,6 @@ public class Controller {
     }
 
     public void oneStepForAllProgram(List<PrgState> programs) throws ControllerError {
-//        for (PrgState program : programs) {
-//            try {
-//                repo.logPrgStateExec(program);
-//            } catch (IOException error) {
-//                throw new ControllerError(error.getMessage());
-//            }
-//        }
 
         List<Callable<PrgState>> call_list = programs.stream()
                 .map((PrgState program) -> (Callable<PrgState>) (program::oneStep))
@@ -60,25 +53,25 @@ public class Controller {
 
             programs.addAll(new_programs_list);
 
-//            for (PrgState program : programs) {
-//                try {
-//                    repo.logPrgStateExec(program);
-//                } catch (IOException error) {
-//                    throw new ControllerError(error.getMessage());
-//                }
-//            }
-
             repo.setPrgList(programs);
         } catch (InterruptedException ignored) {
         }
     }
 
     public void executeOneStep() {
-        executor = Executors.newFixedThreadPool(8);
+        executor = Executors.newFixedThreadPool(2);
 
-        removeCompletedPrg(repo.getPrgList());
         List<PrgState> programStates = repo.getPrgList();
         if (programStates.size() > 0) {
+            IHeap<IValue> shared_heap = programStates.get(0).getHeap();
+            List<IDict<String, IValue>> all_sym_tables = programStates.stream().
+                    map(PrgState::getSymTable).collect(Collectors.toList());
+            List<Integer> all_addresses_from_sym_tables = new ArrayList<>();
+            all_sym_tables.stream()
+                    .map(table -> get_used_addresses_from_sym_table(table.getContent().values()))
+                    .forEach(all_addresses_from_sym_tables::addAll);
+
+            shared_heap.setContent(garbage_collector(all_addresses_from_sym_tables, shared_heap.getContent()));
             try {
                 oneStepForAllProgram(repo.getPrgList());
             } catch (ControllerError err) {
@@ -91,11 +84,12 @@ public class Controller {
                     System.out.println(err.getMessage());
                 }
             });
-            removeCompletedPrg(repo.getPrgList());
             executor.shutdownNow();
+            repo.setPrgList(removeCompletedPrg(repo.getPrgList()));
         }
     }
 
+    @Deprecated
     public void allStep() {
         executor = Executors.newFixedThreadPool(2);
         List<PrgState> programs = removeCompletedPrg(repo.getPrgList());

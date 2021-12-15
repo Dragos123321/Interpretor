@@ -39,7 +39,7 @@ public class Interpreter extends Application {
         MainWindow runWindow = mainLoader.getController();
 
         stage.setTitle("Interpretor");
-        stage.setScene(new Scene(mainWindow, 800, 600));
+        stage.setScene(new Scene(mainWindow, 1024, 600));
         stage.show();
 
         FXMLLoader secondaryLoader = new FXMLLoader();
@@ -51,7 +51,7 @@ public class Interpreter extends Application {
 
         Stage secondaryStage = new Stage();
         secondaryStage.setTitle("Interpretor");
-        secondaryStage.setScene(new Scene(secondaryWindow, 600, 600));
+        secondaryStage.setScene(new Scene(secondaryWindow, 800, 600));
         secondaryStage.show();
     }
 }

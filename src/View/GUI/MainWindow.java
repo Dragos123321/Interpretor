@@ -1,10 +1,7 @@
 package View.GUI;
 
 import Controller.Controller;
-import Model.Adt.IDict;
-import Model.Adt.IHeap;
-import Model.Adt.IList;
-import Model.Adt.IStack;
+import Model.Adt.*;
 import Model.PrgState;
 import Model.Statements.IStmt;
 import Model.Statements.IfStmt;
@@ -67,12 +64,16 @@ public class MainWindow implements Initializable {
     private void populateProgramStateListView() {
         List<PrgState> programs = controller.getRepo().getPrgList();
         programStateListView.setItems(FXCollections.observableList(programs.stream().map(PrgState::getID).collect(Collectors.toList())));
+        programStateListView.refresh();
 
         nrProgramStatesTextField.setText("The number of programs: " + programs.size());
     }
 
     private void populateExeStackListView(PrgState state) {
-        IStack<IStmt> exeStack = state.getExeStack();
+        IStack<IStmt> exeStack = new JStack<>();
+        if (state != null) {
+            exeStack = state.getExeStack();
+        }
 
         List<String> exeStackList = new ArrayList<>();
         for (IStmt statement: exeStack.getAll()) {
@@ -84,7 +85,10 @@ public class MainWindow implements Initializable {
     }
 
     private void populateSymTableView(PrgState state) {
-        IDict<String, IValue> symTable = state.getSymTable();
+        IDict<String, IValue> symTable = new JDict<>();
+        if (state != null) {
+            symTable = state.getSymTable();
+        }
 
         List<Map.Entry<String, String>> symTableList = new ArrayList<>();
         for (var entry : symTable.getAll()) {
@@ -96,14 +100,20 @@ public class MainWindow implements Initializable {
     }
 
     private void populateOutput(PrgState state) {
-        IList<IValue> output = state.getOutput();
+        IList<IValue> output = new JList<>();
+        if (state != null) {
+            output = state.getOutput();
+        }
 
         outListView.setItems(FXCollections.observableList(output.getRawList()));
         outListView.refresh();
     }
 
     private void populateHeapTableView(PrgState state) {
-        IHeap<IValue> heap = state.getHeap();
+        IHeap<IValue> heap = new Heap<>();
+        if (state != null) {
+            heap = state.getHeap();
+        }
 
         List<Map.Entry<Integer, String>> heapList = new ArrayList<>();
         for (var entry : heap.getAll()) {
@@ -115,7 +125,10 @@ public class MainWindow implements Initializable {
     }
 
     private void populateFileTableView(PrgState state) {
-        IDict<String, BufferedReader> fileTable = state.getFileTable();
+        IDict<String, BufferedReader> fileTable = new JDict<>();
+        if (state != null) {
+            fileTable = state.getFileTable();
+        }
 
         List<Map.Entry<String, String>> fileList = new ArrayList<>();
         for (var entry : fileTable.getAll()) {
@@ -130,37 +143,31 @@ public class MainWindow implements Initializable {
         if (programStateListView.getSelectionModel().getSelectedIndex() == -1)
             return null;
         int current_id = programStateListView.getSelectionModel().getSelectedItem();
+        if (controller.getRepo().returnByProgramID(current_id) == null && !controller.getRepo().getPrgList().isEmpty()) {
+            programStateListView.getSelectionModel().select(1);
+            current_id = programStateListView.getSelectionModel().getSelectedItem();
+        }
         return controller.getRepo().returnByProgramID(current_id);
     }
 
     private void changePrgState(PrgState newState) {
-        if (newState == null)
-            return;
+        populateProgramStateListView();
         populateExeStackListView(newState);
         populateFileTableView(newState);
         populateOutput(newState);
         populateHeapTableView(newState);
         populateSymTableView(newState);
-        populateProgramStateListView();
     }
 
     private void oneStep() {
-        if (controller == null) {
+        if (getCurrentPrgState() == null) {
             Alert error = new Alert(Alert.AlertType.ERROR, "No program selected", ButtonType.OK);
-            error.showAndWait();
-            return;
-        }
-
-        boolean programEnd = !Objects.requireNonNull(getCurrentPrgState()).isNotCompleted();
-        if (programEnd) {
-            Alert error = new Alert(Alert.AlertType.ERROR, "Program is empty", ButtonType.OK);
             error.showAndWait();
             return;
         }
 
         controller.executeOneStep();
         changePrgState(getCurrentPrgState());
-        populateProgramStateListView();
     }
 
     public void setController(Controller newController) {
