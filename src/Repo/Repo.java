@@ -1,16 +1,13 @@
 package Repo;
 
-import Model.Adt.IList;
 import Model.PrgState;
-import Model.Adt.JList;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Vector;
 
 public class Repo implements IRepo {
     List<PrgState> mPrgStates;
@@ -19,7 +16,7 @@ public class Repo implements IRepo {
     boolean firstTime;
 
     public Repo(PrgState prgState, String logFilePath) {
-        mPrgStates = new ArrayList<PrgState>();
+        mPrgStates = new Vector<PrgState>();
         addPrg(prgState);
         this.logFilePath = logFilePath;
         this.firstTime = true;
@@ -40,17 +37,17 @@ public class Repo implements IRepo {
     }
 
     @Override
-    public void setPrgList(List<PrgState> newPrgStates) {
+    public synchronized void setPrgList(List<PrgState> newPrgStates) {
         mPrgStates = newPrgStates;
     }
 
     @Override
-    public void addPrg(PrgState newPrg) {
+    public synchronized void addPrg(PrgState newPrg) {
         mPrgStates.add(newPrg);
     }
 
     @Override
-    public void logPrgStateExec(PrgState state) throws IOException {
+    public synchronized void logPrgStateExec(PrgState state) throws IOException {
         if (firstTime) {
             logFile = new PrintWriter(new BufferedWriter(new FileWriter(logFilePath, false)));
             this.firstTime = false;

@@ -1,6 +1,5 @@
 package Model.Adt;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
@@ -8,7 +7,7 @@ public class JList<T> implements IList<T> {
     List<T> list;
 
     public JList() {
-        list = new ArrayList<>();
+        list = new Vector<>();
     }
 
     @Override

@@ -1,12 +1,13 @@
 package Model.Adt;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class JDict<T1, T2> implements IDict<T1, T2> {
     Map<T1, T2> dictionary;
 
     public JDict() {
-        dictionary = new HashMap<T1, T2>();
+        dictionary = new ConcurrentHashMap<T1, T2>();
     }
 
     @Override

@@ -21,8 +21,7 @@ public class HeapReadingExp implements IExp {
     public IValue eval(IDict<String, IValue> symTable, IHeap<IValue> heap) throws TypeMismatch, DivisionByZeroError, ExpError, NotRefError {
         IValue val;
         val = this.exp.eval(symTable, heap);
-        if (val.isRefType()) {
-            RefValue r_val = (RefValue) val;
+        if (val instanceof RefValue r_val) {
             int address = r_val.getValue();
             if (heap.isDefined(address)) {
                 return heap.lookup(address);

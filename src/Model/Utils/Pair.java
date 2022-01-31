@@ -1,10 +1,10 @@
 package Model.Utils;
 
-public class Tuple<T, E> {
+public class Pair<T, E> {
     private final T first;
     private final E second;
 
-    public Tuple(T first, E second) {
+    public Pair(T first, E second) {
         this.first = first;
         this.second = second;
     }

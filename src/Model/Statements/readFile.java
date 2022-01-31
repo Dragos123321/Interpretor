@@ -42,8 +42,6 @@ public class readFile implements IStmt {
             throw new TypeMismatch(var_name + " is not an integer.");
         }
 
-        IntValue ivar = (IntValue) var;
-
         try {
             IValue expr_value = this.expression.eval(symTable, heap);
 

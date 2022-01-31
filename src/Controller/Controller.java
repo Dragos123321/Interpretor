@@ -33,6 +33,13 @@ public class Controller {
     }
 
     public void oneStepForAllProgram(List<PrgState> programs) throws ControllerError {
+        programs.forEach(prg -> {
+            try {
+                repo.logPrgStateExec(prg);
+            } catch (IOException err) {
+                System.out.println(err.getMessage());
+            }
+        });
 
         List<Callable<PrgState>> call_list = programs.stream()
                 .map((PrgState program) -> (Callable<PrgState>) (program::oneStep))
@@ -52,6 +59,14 @@ public class Controller {
                     .collect(Collectors.toList());
 
             programs.addAll(new_programs_list);
+
+            programs.forEach(prg -> {
+                try {
+                    repo.logPrgStateExec(prg);
+                } catch (IOException err) {
+                    System.out.println(err.getMessage());
+                }
+            });
 
             repo.setPrgList(programs);
         } catch (InterruptedException ignored) {
@@ -77,13 +92,6 @@ public class Controller {
             } catch (ControllerError err) {
                 System.out.println(err.getMessage());
             }
-            programStates.forEach(prg -> {
-                try {
-                    repo.logPrgStateExec(prg);
-                } catch (IOException err) {
-                    System.out.println(err.getMessage());
-                }
-            });
             executor.shutdownNow();
             repo.setPrgList(removeCompletedPrg(repo.getPrgList()));
         }

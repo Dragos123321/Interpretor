@@ -6,7 +6,6 @@ import Model.Adt.IList;
 import Model.Adt.IStack;
 import Model.Exceptions.ControllerError;
 import Model.Statements.IStmt;
-import Model.Types.IType;
 import Model.Value.IValue;
 
 import java.io.BufferedReader;
